@@ -123,15 +123,25 @@ const WALLBOARDS: Record<string, WallboardConfig> = {
     thresholds: GLOBAL_THRESHOLDS,
   },
 
-  landp: {
-    key: "landp",
+  lnp: {
+    key: "lnp",
     name: "Contact Center Overview - L&P",
     teams: [
-      { id: "TEAM_3_ID", name: "L&P Team 1" },
-      { id: "TEAM_4_ID", name: "L&P Team 2" },
+      { id: "3139aff3-35ab-4b10-9771-8c2869fa1b79", name: "LnP_BSC_Corp_NonCorp" },
+      { id: "8111c927-86f9-448a-9565-1bb0aa3331ae", name: "LnP_CustSC_BLR" },
+      { id: "69639a79-6675-4997-b402-f8cc8733b9c2", name: "LnP_Exist_Claims" },
     ],
     queues: [
-      { id: "QUEUE_3_ID", name: "L&P Queue 1" },
+      { id: "2146c5f4-d5ee-4579-8c2c-8e44bc3ab87e", name: "LnP_Agency" },
+      { id: "ca6cc4ed-5707-4ee1-8009-59e542fdc59b", name: "LnP_Annuity" },
+      { id: "653bcf77-d22e-46a5-bff5-f71369991ead", name: "LnP_BSC_Corp_OPP" },
+      { id: "32e92361-532c-4a17-b64a-86e84fff954b", name: "LnP_BSC_NonCorp_OPP" },
+      { id: "12bf7e76-ff0c-4392-9434-b2c2200c10d8", name: "LnP_Claims" },
+      { id: "55a43721-dcdb-4f67-8fd7-931c7c373cd0", name: "LnP_CustSC" },
+      { id: "4ba5b95a-0c2d-4f02-a558-97cffd7a20d5", name: "LnP_Exist_Claims" },
+      { id: "d6d898e4-b06f-4b53-ad92-0f3896ea0308", name: "LnP_Exist_Life" },
+      { id: "dca0160c-72c8-41aa-9300-fed2fe9e7fff", name: "LnP_Pensions" },
+      { id: "29b98e8f-2744-474a-b526-da7e8fca084b", name: "LnP_UW" },
     ],
     thresholds: GLOBAL_THRESHOLDS,
   },

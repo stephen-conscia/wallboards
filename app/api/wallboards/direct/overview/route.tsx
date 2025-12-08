@@ -1,5 +1,6 @@
-import { Threshold, getWallboardConfig, METRICS, GLOBAL_THRESHOLDS } from "@/config";
+import { getWallboardConfig } from "@/config";
 import { fetchWallboardData } from "@/lib/api-client";
+import { Aggregation, parseAggregations, startOfToday } from "@/lib/query-helpers";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -10,10 +11,10 @@ interface Root {
 }
 
 interface QueryResults {
-  consciaAgentStateData?: AgentStateData;
-  consciaQueueStateData?: QueueStateData;
-  plannet21AgentStateData?: AgentStateData;
-  plannet21QueueStateData?: QueueStateData;
+  homeAgentStateData?: AgentStateData;
+  homeQueueStateData?: QueueStateData;
+  motorAgentStateData?: AgentStateData;
+  motorQueueStateData?: QueueStateData;
 }
 
 interface AgentStateData {
@@ -32,41 +33,31 @@ interface TaskLeg {
   aggregation: Aggregation[];
 }
 
-interface Aggregation {
-  name: string;
-  value: number;
-}
-
-interface AggregationWithExtras extends Aggregation {
-  label: string;
-  thresholds?: Threshold;
-}
-
 /**
  * Fetch wallboard configs
  */
-const consciaConfig = getWallboardConfig("conscia");
-const plannet21Config = getWallboardConfig("plannet21");
+const homeConfig = getWallboardConfig("directHome");
+const motorConfig = getWallboardConfig("directMotor");
 
-const consciaTeamIds = consciaConfig?.teams.map(t => t.id) ?? [];
-const consciaQueueIds = consciaConfig?.queues.map(q => q.id) ?? [];
-const plannet21TeamIds = plannet21Config?.teams.map(t => t.id) ?? [];
-const plannet21QueueIds = plannet21Config?.queues.map(q => q.id) ?? [];
+const homeTeamIds = homeConfig?.teams.map(t => t.id) ?? [];
+const homeQueueIds = homeConfig?.queues.map(q => q.id) ?? [];
+const motorTeamIds = motorConfig?.teams.map(t => t.id) ?? [];
+const motorQueueIds = motorConfig?.queues.map(q => q.id) ?? [];
 
 /**
  * Generate GraphQL queries
  */
-const consciaAgentQuery = generateAgentQuery("conscia", consciaTeamIds);
-const consciaQueueQuery = generateQueueQuery("conscia", consciaQueueIds);
-const plannet21AgentQuery = generateAgentQuery("plannet21", plannet21TeamIds);
-const plannet21QueueQuery = generateQueueQuery("plannet21", plannet21QueueIds);
+const homeAgentQuery = generateAgentQuery("home", homeTeamIds);
+const homeQueueQuery = generateQueueQuery("home", homeQueueIds);
+const motorAgentQuery = generateAgentQuery("motor", motorTeamIds);
+const motorQueueQuery = generateQueueQuery("motor", motorQueueIds);
 
 /**
  * Main handler
  */
 export async function GET(request: NextRequest) {
   try {
-    if (!consciaConfig || !plannet21Config) {
+    if (!homeConfig || !motorConfig) {
       return NextResponse.json(
         { error: "Wallboard data not available" },
         { status: 400 }
@@ -76,35 +67,34 @@ export async function GET(request: NextRequest) {
     const now = Date.now();
 
     const query = `
-      query Overview($to: Long!) {
-        ${consciaAgentQuery}
-        ${consciaQueueQuery}
-        ${plannet21AgentQuery}
-        ${plannet21QueueQuery}
+      query DirectOverview($to: Long!) {
+        ${homeAgentQuery}
+        ${homeQueueQuery}
+        ${motorAgentQuery}
+        ${motorQueueQuery}
       }
     `;
 
-    const { data } = await fetchWallboardData<Root>(query, "", { to: now });
+    const { data } = await fetchWallboardData<Root>(query, "direct-overview", { to: now });
 
-    const consciaAgentStats = data.consciaAgentStateData
-      ? parseAggregations(data.consciaAgentStateData.agentSessions[0].aggregation)
+    const homeAgentStats = data.homeAgentStateData
+      ? parseAggregations(data.homeAgentStateData.agentSessions[0].aggregation)
       : [];
-    const plannet21AgentStats = data.plannet21AgentStateData
-      ? parseAggregations(data.plannet21AgentStateData.agentSessions[0].aggregation)
+    const motorAgentStats = data.motorAgentStateData
+      ? parseAggregations(data.motorAgentStateData.agentSessions[0].aggregation)
       : [];
-    const consciaQueueStats = data.consciaQueueStateData
-      ? parseAggregations(data.consciaQueueStateData.taskLegs[0].aggregation)
+    const homeQueueStats = data.homeQueueStateData
+      ? parseAggregations(data.homeQueueStateData.taskLegs[0].aggregation)
       : [];
-    const plannet21QueueStats = data.plannet21QueueStateData
-      ? parseAggregations(data.plannet21QueueStateData.taskLegs[0].aggregation)
+    const motorQueueStats = data.motorQueueStateData
+      ? parseAggregations(data.motorQueueStateData.taskLegs[0].aggregation)
       : [];
 
     return NextResponse.json({
-      timestamp: new Date().toISOString(),
-      consciaAgentStats,
-      plannet21AgentStats,
-      consciaQueueStats,
-      plannet21QueueStats
+      homeAgentStats,
+      motorAgentStats,
+      homeQueueStats,
+      motorQueueStats
     });
   } catch (err) {
     console.error("Error fetching overview:", err);
@@ -113,17 +103,6 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-/**
- * Helper to parse aggregations into normalized objects
- */
-function parseAggregations(aggregations: Aggregation[]): AggregationWithExtras[] {
-  return aggregations.map(agg => ({
-    ...agg,
-    label: METRICS[agg.name]?.label ?? agg.name,
-    thresholds: GLOBAL_THRESHOLDS[agg.name]
-  }));
 }
 
 /**
@@ -180,14 +159,4 @@ function generateQueueQuery(prefix: string, queueIds: string[]): string {
     }
   `;
 }
-
-/**
- * Helper to get start of day timestamp
- */
-function startOfToday(): number {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return today.getTime();
-}
-
 

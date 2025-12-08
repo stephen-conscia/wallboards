@@ -10,3 +10,46 @@ export function getThresholdStatus(
   if (value >= threshold.warning) return "warning";
   return "default"
 }
+
+export function formatTimeSince(epochTime: number): string {
+  // Difference in milliseconds
+  const diffMs = Date.now() - epochTime;
+
+  // Convert to total seconds
+  const totalSeconds = Math.floor(diffMs / 1000);
+
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  // Pad with zeros
+  const pad = (num: number) => num.toString().padStart(2, "0");
+
+  return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+}
+
+
+/**
+ * Returns a text color class corresponding to the agent's current state in dark mode.
+ * @param state The agent's current state (e.g., "idle", "available", "connected")
+ * @returns A Tailwind text color class
+ */
+export function getStateTextColor(state: string): string {
+  switch (state.toLowerCase()) {
+    case "idle":
+      return "text-yellow-300";       // warning
+    case "available":
+      return "text-green-400";        // success
+    case "connected":
+      return "text-blue-400";         // info
+    case "wrapup":
+      return "text-purple-400";       // secondary
+    case "not_responding":
+      return "text-red-400";          // danger
+    case "after_call_work":
+      return "text-orange-400";       // attention
+    default:
+      return "text-gray-300";         // unknown/other
+  }
+}
+

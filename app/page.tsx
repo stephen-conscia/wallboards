@@ -1,17 +1,16 @@
-import Image from "next/image";
+// In your home page component, e.g., pages/index.tsx
+import Link from "next/link";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <>
-      <Image src="/aviva-logo.svg" width={100} height={100} alt="Aviva logo" />
+    <div className="flex flex-col w-full justify-start items-center gap-3">
+      <h1 className="text-3xl font-bold mb-4 text-center">Home Page</h1>
 
-      hello
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorem distinctio est quidem itaque id eos eligendi provident voluptatem dolorum, nisi sint, incidunt ex in et delectus alias veniam nemo facilis.</p>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorem distinctio est quidem itaque id eos eligendi provident voluptatem dolorum, nisi sint, incidunt ex in et delectus alias veniam nemo facilis.</p>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorem distinctio est quidem itaque id eos eligendi provident voluptatem dolorum, nisi sint, incidunt ex in et delectus alias veniam nemo facilis.</p>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorem distinctio est quidem itaque id eos eligendi provident voluptatem dolorum, nisi sint, incidunt ex in et delectus alias veniam nemo facilis.</p>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorem distinctio est quidem itaque id eos eligendi provident voluptatem dolorum, nisi sint, incidunt ex in et delectus alias veniam nemo facilis.</p>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorem distinctio est quidem itaque id eos eligendi provident voluptatem dolorum, nisi sint, incidunt ex in et delectus alias veniam nemo facilis.</p>
-    </>
+      <Link href="/conscia/overview" className="text-blue-500 underline text-xl">Conscia - Overview</Link>
+      <Link href="/conscia/agent-activity" className="text-blue-500 underline text-xl">Conscia - Agent Activity</Link>
+      <Link href="/direct/overview" className="text-blue-500 underline text-xl">Direct - Overview</Link>
+      <Link href="/lnp/agent-activity" className="text-blue-500 underline text-xl">LNP - Agent Activity</Link>
+    </div>
   );
 }
+
