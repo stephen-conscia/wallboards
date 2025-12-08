@@ -1,13 +1,14 @@
+
 "use client";
 interface Root {
-  homeAgentStats: HomeAgentStat[]
-  motorAgentStats: MotorAgentStat[]
-  homeQueueStats: HomeQueueStat[]
-  motorQueueStats: MotorQueueStat[]
+  consciaAgentStats: ConsciaAgentStat[]
+  plannet21AgentStats: Plannet21AgentStat[]
+  consciaQueueStats: ConsciaQueueStat[]
+  plannet21QueueStats: Plannet21QueueStat[]
   timestamp: string;
 }
 
-interface HomeAgentStat {
+interface ConsciaAgentStat {
   name: string
   value: number
   label: string
@@ -19,7 +20,7 @@ interface Thresholds {
   danger: number
 }
 
-interface MotorAgentStat {
+interface Plannet21AgentStat {
   name: string
   value: number
   label: string
@@ -31,7 +32,7 @@ interface Thresholds2 {
   danger: number
 }
 
-interface HomeQueueStat {
+interface ConsciaQueueStat {
   name: string
   value: number
   label: string
@@ -43,7 +44,7 @@ interface Thresholds3 {
   danger: number
 }
 
-interface MotorQueueStat {
+interface Plannet21QueueStat {
   name: string
   value: number
   label: string
@@ -56,6 +57,7 @@ interface Thresholds4 {
 }
 
 
+
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import Card from "../components/Card";
@@ -65,7 +67,7 @@ export default function Page() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch("/api/wallboards/direct-overview");
+      const res = await fetch("/api/wallboards/conscia-overview");
       const data = await res.json();
       setApiData(data);
     } catch (err) {
@@ -93,25 +95,25 @@ export default function Page() {
           className="w-40 sm:w-48 md:w-56 lg:w-64 h-auto"
         />
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center">
-          Direct
+          Conscia Overview
         </h1>
       </div>
 
       {/* Grid of cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-screen-2xl">
         <div className="flex items-center justify-center mx-auto w-64 sm:w-full p-8 border border-slate-500 dark:border-slate-700 text-center rounded-lg shadow-xl">
-          <h3 className="uppercase text-lg sm:text-xl lg:text-2xl font-semibold mb-2">Direct Home</h3>
+          <h3 className="uppercase text-lg sm:text-xl lg:text-2xl font-semibold mb-2">Conscia</h3>
         </div>
-        <Card title={apiData.homeQueueStats[0].label} value={apiData.homeQueueStats[0].value} />
-        {apiData.homeAgentStats.map(stat => <Card key={stat.name} title={stat.label} value={stat.value} />)}
+        <Card title={apiData.consciaQueueStats[0].label} value={apiData.consciaQueueStats[0].value} />
+        {apiData.consciaAgentStats.map(stat => <Card key={stat.name} title={stat.label} value={stat.value} />)}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-screen-2xl">
         <div className="flex items-center justify-center mx-auto w-64 sm:w-full p-8 border border-slate-500 dark:border-slate-700 text-center rounded-lg shadow-xl">
-          <h3 className="uppercase text-lg sm:text-xl lg:text-2xl font-semibold mb-2">Direct Motor</h3>
+          <h3 className="uppercase text-lg sm:text-xl lg:text-2xl font-semibold mb-2">Plannet 21</h3>
         </div>
-        <Card title={apiData.motorQueueStats[0].label} value={apiData.motorQueueStats[0].value} />
-        {apiData.motorAgentStats.map(stat => <Card key={stat.name} title={stat.label} value={stat.value} />)}
+        <Card title={apiData.plannet21QueueStats[0].label} value={apiData.plannet21QueueStats[0].value} />
+        {apiData.plannet21AgentStats.map(stat => <Card key={stat.name} title={stat.label} value={stat.value} />)}
       </div>
 
       {/* Last updated */}

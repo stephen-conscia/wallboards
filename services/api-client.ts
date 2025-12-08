@@ -10,13 +10,9 @@ export async function fetchWallboardData<T>(
   ttlMs: number = 4000
 ): Promise<T> {
 
-  console.log(variables);
-  console.log("cache key", cacheKey);
   const cached = getCache<T>(cacheKey);
-  console.log("cached", cached);
   if (cached) console.log("*", cacheKey, "cached");
   if (cached) return cached;
-  console.log("no cache.. continuing...");
 
   const token = await getAccessToken();
 
@@ -32,7 +28,6 @@ export async function fetchWallboardData<T>(
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => "");
-    console.log(`API error ${response.status}: ${errorText}`);
     throw new Error(`API error ${response.status}: ${errorText}`);
   }
 
@@ -41,7 +36,6 @@ export async function fetchWallboardData<T>(
     setCache<T>(cacheKey, json, ttlMs);
     return json;
   } catch {
-    console.log("API returned invalid JSON.");
     throw new Error("API returned invalid JSON.");
   }
 

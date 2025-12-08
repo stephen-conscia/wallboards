@@ -9,16 +9,13 @@ export function getCache<T>(key: string): T | null {
   const entry = cache.get(key);
   if (!entry) return null;
   if (Date.now() > entry.expires) {
-    console.log("cache expired for", key);
     cache.delete(key);
     return null;
   }
-  console.log("get", key, cache.get(key));
   return entry.data;
 }
 
 export function setCache<T>(key: string, data: T, ttlMs: number) {
   cache.set(key, { data, expires: Date.now() + ttlMs });
-  console.log("get", key, cache.get(key));
 }
 

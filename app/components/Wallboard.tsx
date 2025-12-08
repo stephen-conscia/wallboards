@@ -7,11 +7,12 @@ import { useState, useEffect } from "react";
 interface Props {
   title: string;
   endPoint: string;
+  timestamp: string;
   columns?: 3 | 4;
   intervalSeconds?: number;
 }
 
-export default function Wallboard({ title, endPoint, columns = 3, intervalSeconds = 3 }: Props) {
+export default function Wallboard({ title, endPoint, timestamp, columns = 3, intervalSeconds = 3 }: Props) {
   const [apiData, setApiData] = useState<any>(null);
 
   const fetchData = async () => {
@@ -63,13 +64,13 @@ export default function Wallboard({ title, endPoint, columns = 3, intervalSecond
       `}
       >
         {Array.from(Array(6).keys()).map(key => (
-          <Card key={key} />
+          <Card key={key} title="title" value={key} />
         ))}
       </div>
 
       {/* Last updated */}
       <div className="mt-10 text-sm opacity-60">
-        Last updated: {new Date().toLocaleTimeString()}
+        Last updated: {new Date(timestamp).toLocaleTimeString()}
       </div>
     </div >
   );

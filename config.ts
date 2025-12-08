@@ -64,6 +64,29 @@ type WallboardConfig = {
 //
 
 const WALLBOARDS: Record<string, WallboardConfig> = {
+  conscia: {
+    key: "conscia",
+    name: "Conscia",
+    teams: [
+      { id: "89f643cb-5ce4-4951-b426-8d64dae62303", name: "Conscia" },
+    ],
+    queues: [
+      { id: "2c749532-d4a7-4a15-bc04-b46ddc2889f6", name: "P21 Test 3" },
+    ],
+    thresholds: GLOBAL_THRESHOLDS,
+  },
+  plannet21: {
+    key: "plannet21",
+    name: "Plannet 21",
+    teams: [
+      { id: "72fcc0c5-454a-4876-87c2-fc63c4d90050", name: "P21 Test" },
+    ],
+    queues: [
+      { id: "4da6f031-9b94-479a-95f1-0229d05f2ed3", name: "P21 Test 1" },
+      { id: "357cb757-368d-4c9a-957e-7b9d9f17458b", name: "P21 Test 2" },
+    ],
+    thresholds: GLOBAL_THRESHOLDS,
+  },
   directHome: {
     key: "direct-home",
     name: "Contact Center Overview - Direct",
