@@ -172,7 +172,7 @@ function generateQueueQuery(prefix: string, queueIds: string[]): string {
         ]
       }
       aggregations: [
-        { field: "id", type: count, name: "Calls In Queue", filter: { status: { equals: "parked" } } }
+        { field: "id", type: count, name: "callsInQueue", filter: { status: { equals: "parked" } } }
       ]
     ) {
       taskLegs { aggregation { name value } }
