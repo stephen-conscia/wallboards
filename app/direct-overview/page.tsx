@@ -54,11 +54,10 @@ interface Thresholds4 {
   warning: number
   danger: number
 }
-
-
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import Card from "../components/Card";
+import { getThresholdStatus } from "@/lib/wallboard-thresholds";
 
 export default function Page() {
   const [apiData, setApiData] = useState<Root | null>(null);
@@ -102,22 +101,25 @@ export default function Page() {
         <div className="flex items-center justify-center mx-auto w-64 sm:w-full p-8 border border-slate-500 dark:border-slate-700 text-center rounded-lg shadow-xl">
           <h3 className="uppercase text-lg sm:text-xl lg:text-2xl font-semibold mb-2">Direct Home</h3>
         </div>
-        <Card title={apiData.homeQueueStats[0].label} value={apiData.homeQueueStats[0].value} />
-        {apiData.homeAgentStats.map(stat => <Card key={stat.name} title={stat.label} value={stat.value} />)}
+        <Card title={apiData.homeQueueStats[0].label} value={apiData.homeQueueStats[0].value} threshold={getThresholdStatus(apiData.homeQueueStats[0].value, apiData.homeQueueStats[0].thresholds)} />
+        {apiData.homeAgentStats.map(stat => <Card key={stat.name} title={stat.label} value={stat.value} threshold={getThresholdStatus(stat.value, stat.thresholds)} />)}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-screen-2xl">
         <div className="flex items-center justify-center mx-auto w-64 sm:w-full p-8 border border-slate-500 dark:border-slate-700 text-center rounded-lg shadow-xl">
           <h3 className="uppercase text-lg sm:text-xl lg:text-2xl font-semibold mb-2">Direct Motor</h3>
         </div>
-        <Card title={apiData.motorQueueStats[0].label} value={apiData.motorQueueStats[0].value} />
-        {apiData.motorAgentStats.map(stat => <Card key={stat.name} title={stat.label} value={stat.value} />)}
+        <Card title={apiData.motorQueueStats[0].label} value={apiData.motorQueueStats[0].value} threshold={getThresholdStatus(apiData.motorQueueStats[0].value, apiData.motorQueueStats[0].thresholds)} />
+        {apiData.motorAgentStats.map(stat => <Card key={stat.name} title={stat.label} value={stat.value} threshold={getThresholdStatus(stat.value, stat.thresholds)} />)}
       </div>
 
       {/* Last updated */}
       <div className="mt-10 text-sm opacity-60">
-        Last updated: {new Date(apiData.timestamp).toLocaleTimeString()}
+        {apiData && (
+          <>Last updated: {new Date(apiData.timestamp).toLocaleTimeString()}</>
+        )}
       </div>
+
     </div >
   );
 }

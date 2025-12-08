@@ -1,5 +1,5 @@
 import { getWallboardConfig } from "@/config";
-import { fetchWallboardData } from "@/services/api-client";
+import { fetchWallboardData } from "@/lib/api-client";
 import { NextRequest, NextResponse } from "next/server";
 
 

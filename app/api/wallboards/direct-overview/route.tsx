@@ -1,5 +1,5 @@
 import { getWallboardConfig, GLOBAL_THRESHOLDS, METRICS, Threshold } from "@/config";
-import { fetchWallboardData } from "@/services/api-client";
+import { fetchWallboardData } from "@/lib/api-client";
 import { NextRequest, NextResponse } from "next/server";
 
 /**

@@ -1,7 +1,9 @@
+import { ThresholdStatus } from "@/lib/wallboard-thresholds";
+
 interface Props {
   title: string;
   value: number;
-  threshold?: "default" | "success" | "warning" | "danger";
+  threshold?: ThresholdStatus
 }
 
 export default function Card({ title, value, threshold = "default" }: Props) {
