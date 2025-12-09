@@ -25,9 +25,10 @@ interface ChannelInfo {
 
 interface Props {
   path: string;
+  title: string;
 }
 
-export default function AgentActivity({ path }: Props) {
+export default function AgentActivity({ path, title }: Props) {
   const [apiData, setApiData] = useState<ApiData | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
@@ -64,7 +65,7 @@ export default function AgentActivity({ path }: Props) {
           className="w-40 sm:w-48 md:w-56 lg:w-64 h-auto"
         />
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center">
-          Conscia Agent Activity
+          {title}
         </h1>
       </div>
 

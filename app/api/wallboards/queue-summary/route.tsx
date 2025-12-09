@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
     const teamIds = wallboardData.teams?.map(config => config.id) ?? [];
     const queueIds = wallboardData.teams?.map(config => config.id) ?? [];
 
-    const q = getQuery(teamParam, teamIds, queueIds);
+    const q = getQuery(teamIds, queueIds);
     const query = `query Summary($to: Long!) { ${q} }`;
 
     const { data } = await fetchWallboardData<Root>(
