@@ -19,20 +19,20 @@ export default function Card({ title, value, threshold = "default", borderColor 
   return (
     <div
       className={`
-        mx-auto
-        w-64 sm:w-72 lg:w-80
-        p-6 sm:p-8 lg:p-10
-        border ${borderColor}
+        flex flex-col justify-between 
+        w-full 
+        p-[3vw] sm:p-[2vw] lg:p-[1.5vw] xl:p-[1vw] xl:py-[2vw]
+        border ${borderColor} 
         text-center 
-        rounded-lg 
-        shadow-xl
+        rounded-xl 
+        shadow-2xl
         transition-all
       `}
     >
-      <h3 className="uppercase text-lg sm:text-xl lg:text-2xl font-semibold mb-2">
+      <h3 className="uppercase text-[clamp(16px,2vw,36px)] font-semibold mb-2">
         {title}
       </h3>
-      <p className={`text-4xl sm:text-5xl lg:text-6xl font-bold ${valueColor}`}>
+      <p className={`text-[clamp(32px,7vw,100px)] font-bold ${valueColor}`}>
         {value}
       </p>
     </div>

@@ -4,9 +4,13 @@
 // ─────────────────────────────────────────────────────────────
 //
 
+export const API_CACHE_TTL_MS = 3000;
+export const CLIENT_REFRESH_INTERVAL_MS = 2000;
+
 export type Threshold = {
   warning: number;
   danger: number;
+  success?: number;
 };
 
 /**
@@ -20,18 +24,24 @@ export const METRICS: Record<string, MetricConfig> = {
   idle: { label: "Idle" },
   available: { label: "Available" },
   callsInQueue: { label: "Calls in Queue" },
-  longestWaitTimeSeconds: { label: "Longest Wait Time (Seconds)" },
+  longestWaitTimeSeconds: { label: "Longest Wait Time" },
+  abandoned: { label: "Abandoned" },
+  callsOffered: { label: "Calls Offered" },
+  connected: { label: "Connected" },
+  agentCount: { label: "Logged In" },
 };
 
 /**
  * Global thresholds shared by all wallboards
  */
 export const GLOBAL_THRESHOLDS: Record<string, Threshold> = {
-  idle: { warning: 3, danger: 8 },
-  available: { warning: 3, danger: 8 },
-  callsInQueue: { warning: 3, danger: 8 },
-  longestWaitTimeSeconds: { warning: 300, danger: 600 },
-};
+  // (order danger -> warning -> success);
+  idle: { warning: 2, danger: 4 },
+  callsInQueue: { warning: 3, danger: 5 },
+  longestWaitTimeSeconds: { danger: 180, warning: 90, success: 1 },
+  available: { danger: 0, warning: 2, success: 3 },
+} as const;
+export type GlobalThresholdKey = keyof typeof GLOBAL_THRESHOLDS;
 
 //
 // ─────────────────────────────────────────────────────────────
@@ -49,7 +59,7 @@ type Queue = {
   name: string;
 };
 
-type WallboardConfig = {
+export type WallboardConfig = {
   key: string;
   name: string;
   teams: Team[];
@@ -89,7 +99,7 @@ const WALLBOARDS: Record<string, WallboardConfig> = {
   },
   directHome: {
     key: "direct-home",
-    name: "Contact Center Overview - Direct",
+    name: "Direct Home",
     teams: [
       { id: "cb915eaa-097c-4102-ae59-66cc959affee", name: "Direct Home Service" },
       { id: "80c53cbd-92fc-4b44-8353-ef549ec37643", name: "Direct Home Renewal" },
@@ -107,7 +117,7 @@ const WALLBOARDS: Record<string, WallboardConfig> = {
 
   directMotor: {
     key: "direct-motor",
-    name: "Contact Center Overview - Direct Motor",
+    name: "Direct Motor",
     teams: [
       { id: "fd5d5e22-5afa-439a-8443-0a13aa0369c9", name: "Direct GCC Multiskilled" },
       { id: "1fe8a4f8-c5dc-4154-80cc-0ebeb297fc55", name: "Direct GCC Motor" },

@@ -1,23 +1,106 @@
 // In your home page component, e.g., pages/index.tsx
 import Link from "next/link";
+import Image from "next/image"; // <--- Added missing Image import
+
+// Define the structure for your link groups
+const linkGroups = [
+  {
+    title: "Conscia",
+    links: [
+      { href: "/conscia/dual-overview", label: "Overview" },
+      { href: "/conscia/agent-activity", label: "Agent Activity" },
+      { href: "/conscia/queue-summary", label: "Queue Summary" },
+    ],
+  },
+  {
+    title: "Direct",
+    links: [
+      { href: "/direct/dual-overview", label: "Overview" },
+    ],
+  },
+  {
+    title: "LNP",
+    links: [
+      { href: "/lnp/agent-activity", label: "Agent Activity" },
+      { href: "/lnp/queue-summary", label: "Queue Summary" },
+    ],
+  },
+  {
+    title: "Global",
+    links: [
+      { href: "/global-status", label: "Global Status" },
+    ],
+  },
+];
 
 export default function HomePage() {
+  const title = "Wallboard Dashboard Links"; // Assuming a title is needed for the header
+
   return (
-    <div className="flex flex-col w-full justify-start items-center gap-3">
-      <h1 className="text-3xl font-bold mb-4 text-center">Home Page</h1>
+    // 1. Maintain h-screen, center content
+    <div className="w-full h-screen flex flex-col items-center py-10 px-6 bg-slate-50 dark:bg-gray-900 text-slate-900 dark:text-white">
 
-      <Link href="/conscia/dual-overview" className="text-blue-500 underline text-xl">Conscia - Overview</Link>
-      <Link href="/conscia/agent-activity" className="text-blue-500 underline text-xl">Conscia - Agent Activity</Link>
-      <Link href="/conscia/queue-summary" className="text-blue-500 underline text-xl">Conscia - Queue Summary</Link>
-      <br />
-      <Link href="/direct/dual-overview" className="text-blue-500 underline text-xl">Direct - Overview</Link>
-      <br />
-      <Link href="/lnp/agent-activity" className="text-blue-500 underline text-xl">LNP - Agent Activity</Link>
-      <Link href="/lnp/queue-summary" className="text-blue-500 underline text-xl">LNP - Queue Summary</Link>
-      <br />
-      <Link href="/global-status" className="text-blue-500 underline text-xl">Global Status</Link>
+      {/* Header */}
+      <div className="flex flex-col items-center gap-4 mb-10">
+        <Image
+          src="/aviva.svg"
+          alt="Company logo"
+          width={200}
+          height={200}
+          // Preserve the original image sizing class
+          className="w-40 sm:w-48 md:w-56 lg:w-64 h-auto"
+        />
+        {/* Use the defined title for a clear heading */}
+        <h1 className="text-[clamp(1.5rem,3vw,3rem)] font-extrabold text-center mt-4">
+          {title}
+        </h1>
+      </div>
 
+      {/* Main Link Content */}
+      {/* 2. Center the link grid vertically on the page */}
+      <div className="flex-grow flex items-start justify-center w-full">
+        {/* 3. Grid for Link Groups: 2 columns on small screens, 4 on large screens */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12 w-full max-w-7xl">
+
+          {linkGroups.map((group) => (
+            // Individual Group Container
+            <div key={group.title} className="flex flex-col items-center p-4 border border-slate-300 dark:border-slate-700 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 bg-white dark:bg-gray-800/50">
+
+              {/* Group Title */}
+              <h2 className="text-[clamp(1.25rem,2.5vw,2rem)] font-bold mb-4 text-center border-b border-current pb-2 w-full">
+                {group.title}
+              </h2>
+
+              {/* Link List */}
+              <ul className="flex flex-col gap-3 w-full">
+                {group.links.map((link) => (
+                  <li key={link.href} className="w-full">
+                    <Link
+                      href={link.href}
+                      className={`
+                        block w-full text-center py-3 px-4 rounded-lg 
+                        bg-blue-600 hover:bg-blue-700 active:bg-blue-800 
+                        text-white 
+                        font-semibold 
+                        // Scalable text size for links
+                        text-[clamp(1rem,1.8vw,1.5rem)]
+                        transition-all duration-200 ease-in-out
+                        shadow-md
+                      `}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+
+        </div>
+      </div>
+
+      {/* Footer / Spacer (optional, but good for symmetry) */}
+      <div className="h-10"></div>
     </div>
   );
 }
-

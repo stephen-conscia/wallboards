@@ -1,3 +1,4 @@
+import { API_CACHE_TTL_MS } from "@/config";
 import { getCache, setCache } from "./memory-cache";
 import { getAccessToken } from "./refresh-token";
 
@@ -7,7 +8,7 @@ export async function fetchWallboardData<T>(
   query: string,
   cacheKey: string,
   variables?: Record<string, unknown>,
-  ttlMs: number = 4000
+  ttlMs: number = API_CACHE_TTL_MS
 ): Promise<T> {
 
   const cached = getCache<T>(cacheKey);
@@ -26,6 +27,7 @@ export async function fetchWallboardData<T>(
     cache: "no-store"
   });
 
+  console.log(ttlMs, "request -------->");
   if (!response.ok) {
     const errorText = await response.text().catch(() => "");
     throw new Error(`API error ${response.status}: ${errorText}`);

@@ -1,15 +1,37 @@
-import { Threshold } from "@/config";
+import { Threshold, GlobalThresholdKey } from "@/config";
 
 export type ThresholdStatus = "default" | "warning" | "danger" | "success";
 
 export function getThresholdStatus(
+  name: GlobalThresholdKey,
   value: number,
   threshold: Threshold | undefined
 ): "default" | "warning" | "danger" | "success" {
   if (!threshold) return "default";
-  if (value >= threshold.danger) return "danger";
-  if (value >= threshold.warning) return "warning";
+
+  let compareValue = value;
+
+  if (name === "longestWaitTimeSeconds") {
+    if (compareValue === 0) return "default";
+    const diffMs = Date.now() - value;
+    compareValue = Math.floor(diffMs / 1000);
+  }
+
+  if (threshold.danger !== undefined && compareValue >= threshold.danger) return "danger";
+  if (threshold.warning !== undefined && compareValue >= threshold.warning) return "warning";
+  if (threshold.success !== undefined && compareValue >= threshold.success) return "success";
   return "default"
+}
+
+
+export function formatCardValue(
+  name: GlobalThresholdKey,
+  value: number,
+) {
+  if (name === "longestWaitTimeSeconds") {
+    return formatTimeSince(value === 0 ? Date.now() : value);
+  }
+  return value;
 }
 
 export function formatTimeSince(epochTime: number): string {
@@ -49,6 +71,13 @@ export function getStateTextColor(state: string): string {
       return "text-red-400";          // danger
     case "after_call_work":
       return "text-orange-400";       // attention
+    case "ringing":
+      return "text-pink-400";         // active alert
+    case "consult":
+      return "text-indigo-300";       // consultative/transition
+    case "transferred":
+      return "text-teal-300";         // successful handoff
+
     default:
       return "text-gray-300";         // unknown/other
   }
