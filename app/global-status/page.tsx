@@ -1,6 +1,7 @@
 "use client";
-import Wallboard, { WallboardData } from "@/app/components/Wallboard";
 import { useState, useEffect } from "react";
+import { GlobalData } from "../api/wallboards/global/route";
+import Wallboard, { WallboardData } from "../components/Wallboard";
 
 export default function Page() {
   const [apiData, setApiData] = useState<WallboardData | null>(null);
@@ -8,7 +9,7 @@ export default function Page() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch("/api/wallboards/queue-summary?team=lnp")
+      const res = await fetch("/api/wallboards/global")
       const data = await res.json();
       setApiData(data);
     } catch (err) {
@@ -26,7 +27,8 @@ export default function Page() {
   if (!hydrated || !apiData) return <div className="text-white text-2xl">Loading...</div>;
 
   return (
-    <Wallboard title="Life & Pension Broker" data={apiData} />
+    <Wallboard title="Global Status" data={apiData} columns={4} />
   );
 }
+
 
