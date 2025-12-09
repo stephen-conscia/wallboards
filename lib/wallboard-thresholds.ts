@@ -4,8 +4,9 @@ export type ThresholdStatus = "default" | "warning" | "danger" | "success";
 
 export function getThresholdStatus(
   value: number,
-  threshold: Threshold
+  threshold: Threshold | undefined
 ): "default" | "warning" | "danger" | "success" {
+  if (!threshold) return "default";
   if (value >= threshold.danger) return "danger";
   if (value >= threshold.warning) return "warning";
   return "default"

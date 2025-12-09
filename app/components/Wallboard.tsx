@@ -2,37 +2,18 @@
 
 import Image from "next/image";
 import Card from "./Card";
-import { useState, useEffect } from "react";
+import { AggregationWithExtras } from "@/lib/query-helpers";
+import { getThresholdStatus } from "@/lib/wallboard-thresholds";
+
+export interface WallboardData { items: AggregationWithExtras[]; timestamp: string };
 
 interface Props {
   title: string;
-  endPoint: string;
-  timestamp: string;
+  data: WallboardData;
   columns?: 3 | 4;
-  intervalSeconds?: number;
 }
 
-export default function Wallboard({ title, endPoint, timestamp, columns = 3, intervalSeconds = 3 }: Props) {
-  const [apiData, setApiData] = useState<any>(null);
-
-  const fetchData = async () => {
-    try {
-      const res = await fetch(endPoint);
-      const data = await res.json();
-      setApiData(data);
-      console.log(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, intervalSeconds * 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  if (!apiData) return <div className="text-white text-2xl">Loading...</div>;
+export default function Wallboard({ data, title, columns = 3 }: Props) {
 
   return (
     <div className="w-full min-h-screen flex flex-col justify-between items-center p-6">
@@ -63,14 +44,12 @@ export default function Wallboard({ title, endPoint, timestamp, columns = 3, int
           max-w-screen-2xl
       `}
       >
-        {Array.from(Array(6).keys()).map(key => (
-          <Card key={key} title="title" value={key} />
-        ))}
+        {data.items.map(item => (<Card key={item.name} title={item.label} value={item.value} threshold={getThresholdStatus(item.value, item.thresholds)} />))}
       </div>
 
       {/* Last updated */}
       <div className="mt-10 text-sm opacity-60">
-        Last updated: {new Date(timestamp).toLocaleTimeString()}
+        Last updated: {new Date(data.timestamp).toLocaleTimeString()}
       </div>
     </div >
   );

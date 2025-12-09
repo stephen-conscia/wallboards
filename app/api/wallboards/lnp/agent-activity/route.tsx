@@ -30,7 +30,6 @@ interface ChannelInfo {
 
 const lnpConfig = getWallboardConfig("lnp");
 const lnpTeamIds = lnpConfig?.teams.map(t => t.id) ?? [];
-console.log(lnpTeamIds);
 
 const teamFilters = lnpTeamIds.map(id => `{ teamId: { equals: "${id}" } }`).join(", ");
 const query = `query AgentTasks($from: Long!, $to: Long!) {

@@ -10,6 +10,7 @@ export default function HomePage() {
       <Link href="/conscia/agent-activity" className="text-blue-500 underline text-xl">Conscia - Agent Activity</Link>
       <Link href="/direct/overview" className="text-blue-500 underline text-xl">Direct - Overview</Link>
       <Link href="/lnp/agent-activity" className="text-blue-500 underline text-xl">LNP - Agent Activity</Link>
+      <Link href="/lnp/queue-summary" className="text-blue-500 underline text-xl">LNP - Queue Summary</Link>
     </div>
   );
 }
