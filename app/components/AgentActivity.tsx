@@ -3,6 +3,8 @@ import { formatTimeSince, getStateTextColor } from "@/lib/wallboard-thresholds";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
+const API_REFRESH_INTERVAL_MS = 1000;
+
 interface ApiData {
   agentSessions: AgentActivity[];
   timestamp: string;
@@ -43,7 +45,7 @@ export default function AgentActivity({ path }: Props) {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 1000);
+    const interval = setInterval(fetchData, API_REFRESH_INTERVAL_MS);
     return () => clearInterval(interval);
   }, []);
 

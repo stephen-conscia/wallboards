@@ -58,6 +58,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { getThresholdStatus } from "@/lib/wallboard-thresholds";
 import Card from "@/app/components/Card";
+import { CLIENT_REFRESH_INTERVAL_MS } from "@/config";
 
 export default function Page() {
   const [apiData, setApiData] = useState<Root | null>(null);
@@ -74,7 +75,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 3000);
+    const interval = setInterval(fetchData, CLIENT_REFRESH_INTERVAL_MS);
     return () => clearInterval(interval);
   }, []);
 

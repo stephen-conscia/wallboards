@@ -1,5 +1,6 @@
 "use client";
 import Wallboard, { WallboardData } from "@/app/components/Wallboard";
+import { CLIENT_REFRESH_INTERVAL_MS } from "@/config";
 import { useState, useEffect } from "react";
 
 export default function Page() {
@@ -19,7 +20,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 3000);
+    const interval = setInterval(fetchData, CLIENT_REFRESH_INTERVAL_MS);
     return () => clearInterval(interval);
   }, []);
 
