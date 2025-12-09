@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Card from "./Card";
 import { AggregationWithExtras } from "@/lib/query-helpers";
-import { getThresholdStatus } from "@/lib/wallboard-thresholds";
+import { formatCardValue, getThresholdStatus } from "@/lib/wallboard-thresholds";
 
 export interface WallboardData { items: AggregationWithExtras[]; timestamp: string }
 
@@ -36,7 +36,7 @@ export default function Wallboard({ data, title, columns = 3 }: Props) {
       {/* Grid */}
       <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:${columns === 4 ? "grid-cols-4" : "grid-cols-3"} gap-6 w-full max-w-screen-2xl`}>
         {data.items.map(item => (
-          <Card key={item.name} title={item.label} value={item.value} threshold={getThresholdStatus(item.value, item.thresholds)} />
+          <Card key={item.name} title={item.label} value={formatCardValue(item.name, item.value)} threshold={getThresholdStatus(item.name, item.value, item.thresholds)} />
         ))}
       </div>
 

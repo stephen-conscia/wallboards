@@ -49,7 +49,6 @@ export interface Aggregation3 {
 
 export async function GET(request: NextRequest) {
   try {
-    console.log(request.url);
     const url = new URL(request.url);
     const teamParam = url.searchParams.get("team");
 
@@ -68,18 +67,22 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    console.log(teamParam);
+
+
     const teamIds = wallboardData.teams?.map(config => config.id) ?? [];
-    const queueIds = wallboardData.teams?.map(config => config.id) ?? [];
+    const queueIds = wallboardData.queues?.map(config => config.id) ?? [];
+
 
     const q = getQuery(teamIds, queueIds);
     const query = `query Summary($to: Long!) { ${q} }`;
+
 
     const { data } = await fetchWallboardData<Root>(
       query,
       url.pathname + url.search,
       { to: Date.now() }
     );
-
 
     const taskLegs = data.taskLegDetails.taskLegs;
     const tasks = data.taskDetails.tasks;
@@ -109,6 +112,7 @@ taskLegDetails: taskLegDetails(
   to: $to
   filter: {
     and: [
+      { status: { equals: "parked" } },
       { channelType:{ equals: telephony } },
       { isActive:{ equals: true } },
       { or: [ ${queueIds.map(id => `{ queue: {id: { equals: "${id}" } } }`).join(",")} ] }
@@ -119,13 +123,11 @@ taskLegDetails: taskLegDetails(
       field: "id"
       type: count
       name: "callsInQueue"
-      filter: { status: { equals: "parked" } }
     },
     {
       field: "createdTime"
       type: min
       name: "longestWaitTimeSeconds"
-      filter: { status: { equals: "parked" } }
     }
   ]
 ) {

@@ -2,11 +2,12 @@ import { ThresholdStatus } from "@/lib/wallboard-thresholds";
 
 interface Props {
   title: string;
-  value: number;
+  value: number | string;
   threshold?: ThresholdStatus
+  borderColor?: string;
 }
 
-export default function Card({ title, value, threshold = "default" }: Props) {
+export default function Card({ title, value, threshold = "default", borderColor = "border-slate-500 dark:border-slate-700" }: Props) {
   // Map threshold to Tailwind text color
   const valueColor = {
     default: "text-slate-900 dark:text-slate-100",
@@ -17,16 +18,16 @@ export default function Card({ title, value, threshold = "default" }: Props) {
 
   return (
     <div
-      className="
+      className={`
         mx-auto
         w-64 sm:w-72 lg:w-80
         p-6 sm:p-8 lg:p-10
-        border border-slate-500 dark:border-slate-700 
+        border ${borderColor}
         text-center 
         rounded-lg 
         shadow-xl
         transition-all
-      "
+      `}
     >
       <h3 className="uppercase text-lg sm:text-xl lg:text-2xl font-semibold mb-2">
         {title}
