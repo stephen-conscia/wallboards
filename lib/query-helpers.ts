@@ -1,4 +1,4 @@
-import { GLOBAL_THRESHOLDS, METRICS, Threshold } from "@/config";
+import { getWallboardConfig, METRICS, Threshold, WALLBOARDS } from "@/config";
 
 export interface Aggregation {
   name: string;
@@ -13,11 +13,12 @@ export interface AggregationWithExtras extends Aggregation {
 /**
  * Helper to parse aggregations into normalized objects
  */
-export function parseAggregations(aggregations: Aggregation[]): AggregationWithExtras[] {
+export function parseAggregations(aggregations: Aggregation[], teamKey?: keyof typeof WALLBOARDS): AggregationWithExtras[] {
+  const thresholds = teamKey ? getWallboardConfig(teamKey)?.thresholds : undefined;
   return aggregations.map(agg => ({
     ...agg,
     label: METRICS[agg.name]?.label ?? agg.name,
-    thresholds: GLOBAL_THRESHOLDS[agg.name]
+    thresholds: thresholds?.[agg.name]
   }));
 }
 

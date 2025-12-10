@@ -31,24 +31,6 @@ export const METRICS: Record<string, MetricConfig> = {
   agentCount: { label: "Logged In" },
 };
 
-/**
- * Global thresholds shared by all wallboards
- */
-export const GLOBAL_THRESHOLDS: Record<string, Threshold> = {
-  // (order danger -> warning -> success);
-  idle: { warning: 2, danger: 4 },
-  callsInQueue: { warning: 3, danger: 5 },
-  longestWaitTimeSeconds: { danger: 180, warning: 90, success: 1 },
-  available: { danger: 0, warning: 2, success: 3 },
-} as const;
-export type GlobalThresholdKey = keyof typeof GLOBAL_THRESHOLDS;
-
-//
-// ─────────────────────────────────────────────────────────────
-//  Wallboard Types
-// ─────────────────────────────────────────────────────────────
-//
-
 type Team = {
   id: string;
   name: string;
@@ -64,7 +46,8 @@ export type WallboardConfig = {
   name: string;
   teams: Team[];
   queues: Queue[];
-  thresholds: typeof GLOBAL_THRESHOLDS; // shared thresholds
+  thresholds?: Partial<Record<keyof typeof METRICS, Threshold>>;
+
 };
 
 //
@@ -73,7 +56,7 @@ export type WallboardConfig = {
 // ─────────────────────────────────────────────────────────────
 //
 
-const WALLBOARDS: Record<string, WallboardConfig> = {
+export const WALLBOARDS: Record<string, WallboardConfig> = {
   conscia: {
     key: "conscia",
     name: "Conscia",
@@ -83,7 +66,13 @@ const WALLBOARDS: Record<string, WallboardConfig> = {
     queues: [
       { id: "2c749532-d4a7-4a15-bc04-b46ddc2889f6", name: "P21 Test 3" },
     ],
-    thresholds: GLOBAL_THRESHOLDS,
+    thresholds: {
+      idle: { warning: 2, danger: 4 },
+      callsInQueue: { warning: 2, danger: 3 },
+      longestWaitTimeSeconds: { danger: 180, warning: 90, success: 1 },
+      available: { danger: 0, warning: 2, success: 3 },
+
+    }
   },
   plannet21: {
     key: "plannet21",
@@ -95,7 +84,13 @@ const WALLBOARDS: Record<string, WallboardConfig> = {
       { id: "4da6f031-9b94-479a-95f1-0229d05f2ed3", name: "P21 Test 1" },
       { id: "357cb757-368d-4c9a-957e-7b9d9f17458b", name: "P21 Test 2" },
     ],
-    thresholds: GLOBAL_THRESHOLDS,
+    thresholds: {
+      idle: { warning: 2, danger: 4 },
+      callsInQueue: { warning: 2, danger: 3 },
+      longestWaitTimeSeconds: { danger: 180, warning: 90, success: 1 },
+      available: { danger: 0, warning: 2, success: 3 },
+    }
+
   },
   directHome: {
     key: "direct-home",
@@ -112,7 +107,13 @@ const WALLBOARDS: Record<string, WallboardConfig> = {
       { id: "cdc1be33-c6c3-4f4f-a44e-bdccde7b087d", name: "Direct Home Renewal" },
       { id: "1f9f483c-434b-466b-94b3-cbc7211ad394", name: "Direct Home Sales" },
     ],
-    thresholds: GLOBAL_THRESHOLDS,
+    thresholds: {
+      idle: { warning: 2, danger: 4 },
+      callsInQueue: { warning: 2, danger: 3 },
+      longestWaitTimeSeconds: { danger: 180, warning: 90, success: 1 },
+      available: { danger: 0, warning: 2, success: 3 },
+    }
+
   },
 
   directMotor: {
@@ -130,7 +131,12 @@ const WALLBOARDS: Record<string, WallboardConfig> = {
       { id: "853f7c5d-f01c-495d-ac42-741e9c6bd1d3", name: "Direct Motor Renewal" },
       { id: "1265b5a6-c3de-4bc0-b19d-247994538384", name: "Direct Motor Sales" },
     ],
-    thresholds: GLOBAL_THRESHOLDS,
+    thresholds: {
+      idle: { warning: 2, danger: 4 },
+      callsInQueue: { warning: 2, danger: 3 },
+      longestWaitTimeSeconds: { danger: 180, warning: 90, success: 1 },
+      available: { danger: 0, warning: 2, success: 3 },
+    }
   },
 
   lnp: {
@@ -153,9 +159,14 @@ const WALLBOARDS: Record<string, WallboardConfig> = {
       { id: "dca0160c-72c8-41aa-9300-fed2fe9e7fff", name: "LnP_Pensions" },
       { id: "29b98e8f-2744-474a-b526-da7e8fca084b", name: "LnP_UW" },
     ],
-    thresholds: GLOBAL_THRESHOLDS,
+    thresholds: {
+      idle: { warning: 2, danger: 4 },
+      callsInQueue: { warning: 2, danger: 3 },
+      longestWaitTimeSeconds: { danger: 180, warning: 90, success: 1 },
+      available: { danger: 0, warning: 2, success: 3 },
+    }
   },
-};
+} as const;
 
 //
 // ─────────────────────────────────────────────────────────────
@@ -163,6 +174,6 @@ const WALLBOARDS: Record<string, WallboardConfig> = {
 // ─────────────────────────────────────────────────────────────
 //
 
-export function getWallboardConfig(key: string) {
+export function getWallboardConfig(key: keyof typeof WALLBOARDS) {
   return WALLBOARDS[key];
 }

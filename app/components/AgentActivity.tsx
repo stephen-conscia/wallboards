@@ -81,13 +81,20 @@ export default function AgentActivity({ path, title }: Props) {
         <table className="w-full border-separate border-spacing-y-2">
 
           {/* Table Header */}
-          <thead className="bg-neutral-secondary-medium">
+          <thead className="bg-neutral-secondary-medium text-slate-400">
             <tr>
-              {/* 5. Scaled up text and padding for TH elements */}
-              <th scope="col" className="px-10 py-4 text-[clamp(1.25rem,2.5vw,2.5rem)] font-extrabold rounded-s-xl">Agent Name</th>
-              <th scope="col" className="px-10 py-4 text-[clamp(1.25rem,2.5vw,2.5rem)] font-extrabold">State</th>
-              <th scope="col" className="px-10 py-4 text-[clamp(1.25rem,2.5vw,2.5rem)] font-extrabold">Reason Code</th>
-              <th scope="col" className="px-10 py-4 text-[clamp(1.25rem,2.5vw,2.5rem)] font-extrabold rounded-e-xl">Time in State</th>
+              <th scope="col" className="px-10 py-4 uppercase tracking-wide text-left align-middle text-[clamp(1.25rem,2.5vw,2.5rem)] font-extrabold">
+                Agent Name
+              </th>
+              <th scope="col" className="px-10 py-4 uppercase tracking-wide text-left align-middle text-[clamp(1.25rem,2.5vw,2.5rem)] font-extrabold">
+                State
+              </th>
+              <th scope="col" className="px-10 py-4 uppercase tracking-wide text-left align-middle text-[clamp(1.25rem,2.5vw,2.5rem)] font-extrabold">
+                Reason Code
+              </th>
+              <th scope="col" className="px-10 py-4 uppercase tracking-wide text-left align-middle text-[clamp(1.25rem,2.5vw,2.5rem)] font-extrabold">
+                Time in State
+              </th>
             </tr>
           </thead>
 
@@ -96,14 +103,14 @@ export default function AgentActivity({ path, title }: Props) {
             {apiData.agentSessions.map((session) => (
               <tr key={session.agentId} className="bg-neutral-primary shadow-lg hover:shadow-xl transition-shadow duration-200">
                 {/* 6. Scaled up text and padding for TD elements */}
-                <th scope="row" className="px-10 py-6 font-bold text-[clamp(1.5rem,3.5vw,3rem)] whitespace-nowrap rounded-s-lg">
+                <th scope="row" className="px-10 py-4 font-bold text-[clamp(1.5rem,3.5vw,3rem)] whitespace-nowrap">
                   {session.agentName}
                 </th>
-                <td className={`px-10 py-6 text-[clamp(1.5rem,3.5vw,3rem)] font-bold ${getStateTextColor(session.channelInfo[0].currentState)} rounded-none`}>
+                <td className={`px-10 py-4 text-[clamp(1.5rem,3.5vw,3rem)] font-bold ${getStateTextColor(session.channelInfo[0].currentState)} rounded-none`}>
                   {session.channelInfo[0].currentState}
                 </td>
-                <td className="px-10 py-6 text-[clamp(1.5rem,3.5vw,3rem)] rounded-none">{session.channelInfo[0].idleCodeName}</td>
-                <td className="px-10 py-6 text-[clamp(1.5rem,3.5vw,3rem)] rounded-e-lg">
+                <td className="px-10 py-4 text-[clamp(1.5rem,3.5vw,3rem)]">{session.channelInfo[0].idleCodeName}</td>
+                <td className="px-10 py-4 text-[clamp(1.5rem,3.5vw,3rem)]">
                   {formatTimeSince(session.channelInfo[0].lastActivityTime)}
                 </td>
               </tr>

@@ -169,7 +169,6 @@ query AgentTasks($from: Long!, $to: Long!) {
 
 export async function GET(request: NextRequest) {
   try {
-    console.log(request.url);
 
     const { data } = await fetchWallboardData<GlobalData>(
       query,

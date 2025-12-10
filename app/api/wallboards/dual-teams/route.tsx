@@ -48,12 +48,11 @@ export async function GET(request: NextRequest) {
         { status: 400 }
       );
     }
-    console.log(teams);
 
     const wallboardData: WallboardConfig[] = [];
     for (let i = 0; i < teams.length; i++) {
       wallboardData[i] = getWallboardConfig(teams[i]);
-      if (!wallboardData) {
+      if (!wallboardData[i]) {
         return NextResponse.json(
           { error: "Wallboard data not available for " + teams[i] },
           { status: 400 }
@@ -71,10 +70,10 @@ export async function GET(request: NextRequest) {
 
     const { data } = await fetchWallboardData<Root>(query, "B-overview", { to: Date.now() });
 
-    const aAgent = parseAggregations(data.AAgentStateData!.agentSessions[0].aggregation);
-    const aQueue = parseAggregations(data.AQueueStateData!.taskLegs[0].aggregation);
-    const bAgent = parseAggregations(data.BAgentStateData!.agentSessions[0].aggregation);
-    const bQueue = parseAggregations(data.BQueueStateData!.taskLegs[0].aggregation);
+    const aAgent = parseAggregations(data.AAgentStateData!.agentSessions[0].aggregation, teams[0]);
+    const aQueue = parseAggregations(data.AQueueStateData!.taskLegs[0].aggregation, teams[0]);
+    const bAgent = parseAggregations(data.BAgentStateData!.agentSessions[0].aggregation, teams[1]);
+    const bQueue = parseAggregations(data.BQueueStateData!.taskLegs[0].aggregation, teams[1]);
 
     return NextResponse.json({
       timestamp: Date.now(),

@@ -60,14 +60,16 @@ export async function GET(request: NextRequest) {
 
     const agentSessions = data.agentSession.agentSessions;
 
-    const sortedSessions = agentSessions.sort((a, b) => {
+    const sorted = agentSessions.sort((a, b) => {
       const timeA = a.channelInfo[0]?.lastActivityTime ?? 0;
       const timeB = b.channelInfo[0]?.lastActivityTime ?? 0;
 
-      return timeB - timeA;
+      return timeA - timeB;
     });
 
-    return NextResponse.json({ agentSessions: sortedSessions, timestamp: Date.now() });
+    const firstTen = sorted.slice(0, 10);
+
+    return NextResponse.json({ agentSessions: firstTen, timestamp: Date.now() });
 
   } catch (err) {
     console.error("Error fetching overview:", err);

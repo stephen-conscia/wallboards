@@ -12,7 +12,6 @@ export async function fetchWallboardData<T>(
 ): Promise<T> {
 
   const cached = getCache<T>(cacheKey);
-  if (cached) console.log("*", cacheKey, "cached");
   if (cached) return cached;
 
   const token = await getAccessToken();
@@ -27,7 +26,6 @@ export async function fetchWallboardData<T>(
     cache: "no-store"
   });
 
-  console.log(ttlMs, "request -------->");
   if (!response.ok) {
     const errorText = await response.text().catch(() => "");
     throw new Error(`API error ${response.status}: ${errorText}`);

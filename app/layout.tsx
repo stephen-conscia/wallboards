@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Aviva Wallboards",
-  description: "Conscia Ireland",
+  description: "Contact Center Wallboards",
 };
 
 export default function RootLayout({

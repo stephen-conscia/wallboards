@@ -67,16 +67,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    console.log(teamParam);
-
-
     const teamIds = wallboardData.teams?.map(config => config.id) ?? [];
     const queueIds = wallboardData.queues?.map(config => config.id) ?? [];
 
-
     const q = getQuery(teamIds, queueIds);
     const query = `query Summary($to: Long!) { ${q} }`;
-
 
     const { data } = await fetchWallboardData<Root>(
       query,
@@ -88,9 +83,9 @@ export async function GET(request: NextRequest) {
     const tasks = data.taskDetails.tasks;
     const agentSessions = data.agentSession.agentSessions;
 
-    const taskLegStats = parseAggregations(taskLegs[0].aggregation);
-    const taskStats = parseAggregations(tasks[0].aggregation);
-    const agentStats = parseAggregations(agentSessions[0].aggregation);
+    const taskLegStats = parseAggregations(taskLegs[0].aggregation, teamParam);
+    const taskStats = parseAggregations(tasks[0].aggregation, teamParam);
+    const agentStats = parseAggregations(agentSessions[0].aggregation, teamParam);
 
     return NextResponse.json({ items: [...taskStats, ...agentStats, ...taskLegStats], timestamp: Date.now() });
 
