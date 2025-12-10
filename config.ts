@@ -94,7 +94,7 @@ export const WALLBOARDS: Record<string, WallboardConfig> = {
   },
   directHome: {
     key: "direct-home",
-    name: "Direct Home",
+    name: "Home",
     teams: [
       { id: "cb915eaa-097c-4102-ae59-66cc959affee", name: "Direct Home Service" },
       { id: "80c53cbd-92fc-4b44-8353-ef549ec37643", name: "Direct Home Renewal" },
@@ -118,7 +118,7 @@ export const WALLBOARDS: Record<string, WallboardConfig> = {
 
   directMotor: {
     key: "direct-motor",
-    name: "Direct Motor",
+    name: "Motor",
     teams: [
       { id: "fd5d5e22-5afa-439a-8443-0a13aa0369c9", name: "Direct GCC Multiskilled" },
       { id: "1fe8a4f8-c5dc-4154-80cc-0ebeb297fc55", name: "Direct GCC Motor" },

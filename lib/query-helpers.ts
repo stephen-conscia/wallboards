@@ -30,5 +30,3 @@ export function startOfToday(): number {
   today.setHours(0, 0, 0, 0);
   return today.getTime();
 }
-
-

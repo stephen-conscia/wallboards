@@ -127,7 +127,7 @@ query AgentTasks($from: Long!, $to: Long!) {
       {
         field: "id"
         type: count
-        name: "count"
+        name: "agentCount"
       }
       {
         field: "id"

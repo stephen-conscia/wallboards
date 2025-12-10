@@ -1,9 +1,9 @@
-import { Threshold, GlobalThresholdKey } from "@/config";
+import { Threshold, WALLBOARDS, METRICS } from "@/config";
 
 export type ThresholdStatus = "default" | "warning" | "danger" | "success";
 
 export function getThresholdStatus(
-  name: GlobalThresholdKey,
+  name: keyof typeof METRICS,
   value: number,
   threshold: Threshold | undefined
 ): "default" | "warning" | "danger" | "success" {
@@ -11,10 +11,19 @@ export function getThresholdStatus(
 
   let compareValue = value;
 
-  if (name === "longestWaitTimeSeconds") {
-    if (compareValue === 0) return "default";
-    const diffMs = Date.now() - value;
-    compareValue = Math.floor(diffMs / 1000);
+  switch (name) {
+    case "longestWaitTimeSeconds":
+      if (compareValue === 0) return "default";
+
+      const diffMs = Date.now() - value;
+      compareValue = Math.floor(diffMs / 1000);
+      break;
+
+    case "available":
+      if (threshold.success !== undefined && compareValue >= threshold.success) return "success";
+      if (threshold.warning !== undefined && compareValue >= threshold.warning) return "warning";
+      if (threshold.danger !== undefined && compareValue >= threshold.danger) return "danger";
+      break;
   }
 
   if (threshold.danger !== undefined && compareValue >= threshold.danger) return "danger";
@@ -25,7 +34,7 @@ export function getThresholdStatus(
 
 
 export function formatCardValue(
-  name: GlobalThresholdKey,
+  name: keyof typeof METRICS,
   value: number,
 ) {
   if (name === "longestWaitTimeSeconds") {
