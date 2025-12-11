@@ -22,9 +22,10 @@ const rowColors = ["border-yellow-900", "border-sky-900"];
 
 interface Props {
   apiUrl: string;
+  title: string;
 }
 
-export default function DualOverview({ apiUrl }: Props) {
+export default function DualOverview({ apiUrl, title }: Props) {
   const [apiData, setApiData] = useState<Payload | null>(null);
 
   const fetchData = async () => {
@@ -62,9 +63,7 @@ export default function DualOverview({ apiUrl }: Props) {
 
         />
         {/* Use a clamp() for the title for better scaling */}
-        <h1 className="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-center">
-          Dual Overview
-        </h1>
+        <h1 className="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-center">{title}</h1>
       </div>
 
       {/* Main Content Area (Teams) */}
