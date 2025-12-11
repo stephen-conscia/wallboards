@@ -1,13 +1,13 @@
 "use client";
 import { formatTimeSince, getStateTextColor } from "@/lib/wallboard-thresholds";
-import Image from "next/image";
 import { useState, useEffect } from "react";
+import WallboardLayout from "./WallboardLayout";
 
 const API_REFRESH_INTERVAL_MS = 1000;
 
 interface ApiData {
   agentSessions: AgentActivity[];
-  timestamp: string;
+  timestamp: number;
 }
 
 interface AgentActivity {
@@ -56,23 +56,7 @@ export default function AgentActivity({ path, title }: Props) {
 
   return (
     // 1. Enforce h-screen and use vertical padding (py-8)
-    <div className="w-full h-screen flex flex-col py-8 px-6">
-
-      {/* Top section: logo + heading */}
-      <div className="flex flex-col items-center gap-4 mb-8">
-        <Image
-          src="/aviva.svg"
-          alt="Company logo"
-          width={200}
-          height={200}
-          // Retaining the original sizing class for the logo as requested
-          className="w-40 sm:w-48 md:w-56 lg:w-64 h-auto"
-        />
-        {/* 2. Scalable Title: Using clamp() */}
-        <h1 className="text-[clamp(2rem,4vw,3.5rem)] font-bold text-center">
-          {title}
-        </h1>
-      </div>
+    <WallboardLayout title={title} timestamp={apiData.timestamp}>
 
       {/* Middle section: table (grows) */}
       {/* 3. Added flex-grow to the main content container and overflow-y-auto for safety */}
@@ -106,11 +90,11 @@ export default function AgentActivity({ path, title }: Props) {
                 <th scope="row" className="px-10 py-4 font-bold text-[clamp(1.5rem,3.5vw,3rem)] whitespace-nowrap">
                   {session.agentName}
                 </th>
-                <td className={`px-10 py-4 text-[clamp(1.5rem,3.5vw,3rem)] font-bold ${getStateTextColor(session.channelInfo[0].currentState)} rounded-none`}>
+                <td className={`px-2 py-3 text-[clamp(1.5rem,3.5vw,3rem)] font-bold ${getStateTextColor(session.channelInfo[0].currentState)} rounded-none`}>
                   {session.channelInfo[0].currentState}
                 </td>
-                <td className="px-10 py-4 text-[clamp(1.5rem,3.5vw,3rem)]">{session.channelInfo[0].idleCodeName}</td>
-                <td className="px-10 py-4 text-[clamp(1.5rem,3.5vw,3rem)]">
+                <td className="px-2 py-3 text-[clamp(1.5rem,3.5vw,3rem)]">{session.channelInfo[0].idleCodeName}</td>
+                <td className="px-2 py-3 text-[clamp(1.5rem,3.5vw,3rem)]">
                   {formatTimeSince(session.channelInfo[0].lastActivityTime)}
                 </td>
               </tr>
@@ -118,11 +102,6 @@ export default function AgentActivity({ path, title }: Props) {
           </tbody>
         </table>
       </div>
-
-      {/* Last updated: moved outside the table container and pinned to the bottom */}
-      <div className="mt-6 text-[clamp(1rem,1.5vw,1.5rem)] opacity-60 text-center">
-        {hydrated && apiData && <>Last updated: {new Date(apiData.timestamp).toLocaleTimeString()}</>}
-      </div>
-    </div>
+    </WallboardLayout>
   );
 }

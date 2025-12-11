@@ -1,15 +1,16 @@
 import { ThresholdStatus } from "@/lib/wallboard-thresholds";
+import { JSX } from "react";
 
 interface Props {
   title: string;
-  value: number | string;
+  value?: string | React.ReactNode | number | JSX.Element;
   threshold?: ThresholdStatus
   borderColor?: string;
 }
 
-export default function Card({ title, value, threshold = "default", borderColor = "border-slate-500 dark:border-slate-700" }: Props) {
-  // Map threshold to Tailwind text color
-  const valueColor = {
+export default function Card({ title, value: content, threshold = "default", borderColor = "border-slate-500 dark:border-slate-700" }: Props) {
+  const isTitleOnly = content === undefined || content === null;
+  const status = {
     default: "text-slate-900 dark:text-slate-100",
     success: "text-green-600 dark:text-green-400",
     warning: "text-orange-500 dark:text-orange-400",
@@ -19,23 +20,37 @@ export default function Card({ title, value, threshold = "default", borderColor 
   return (
     <div
       className={`
-        flex flex-col justify-between 
-        w-full 
-        p-[3vw] sm:p-[2vw] lg:p-[1.5vw] xl:p-[1vw] xl:py-[2vw]
-        border ${borderColor} 
-        text-center 
-        rounded-xl 
-        shadow-2xl
-        transition-all
+        flex flex-col justify-center items-center
+        gap-3 md:gap-4 lg:gap-6
+        border-2 rounded-2xl ${borderColor}
+        p-6 md:p-8 lg:p-10
       `}
     >
-      <h3 className="uppercase text-[clamp(16px,2vw,36px)] font-semibold mb-2">
+      {/* Title */}
+      <h3
+        className="
+          tracking-tight text-heading
+          text-2xl md:text-3xl lg:text-4xl xl:text-5xl
+          text-center
+        "
+      >
         {title}
       </h3>
-      <p className={`text-[clamp(32px,7vw,100px)] font-bold ${valueColor}`}>
-        {value}
-      </p>
+
+      {/* Content */}
+      {!isTitleOnly && (
+        <p
+          className={`
+            font-bold tracking-tight text-heading
+            text-4xl md:text-5xl lg:text-6xl xl:text-7xl
+            text-center ${status}
+          `}
+        >
+          {content}
+        </p>
+      )}
     </div>
   );
 }
+
 

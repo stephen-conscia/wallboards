@@ -1,4 +1,3 @@
-import { getWallboardConfig } from "@/config";
 import { fetchWallboardData } from "@/lib/api-client";
 import { Aggregation, parseAggregations, startOfToday } from "@/lib/query-helpers";
 import { NextRequest, NextResponse } from "next/server";

@@ -1,8 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import { GlobalData } from "../api/wallboards/global/route";
-import Wallboard, { WallboardData } from "../components/Wallboard";
 import { CLIENT_REFRESH_INTERVAL_MS } from "@/config";
+import GridLayout, { WallboardData } from "@/app/components/GridLayout";
 
 export default function Page() {
   const [apiData, setApiData] = useState<WallboardData | null>(null);
@@ -28,7 +27,7 @@ export default function Page() {
   if (!hydrated || !apiData) return <div className="text-white text-2xl">Loading...</div>;
 
   return (
-    <Wallboard title="Global Status" data={apiData} columns={4} />
+    <GridLayout title="Global Status" timestamp={apiData.timestamp} items={apiData.items} columns={4} />
   );
 }
 

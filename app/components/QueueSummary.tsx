@@ -1,15 +1,20 @@
 "use client";
-import Wallboard, { WallboardData } from "@/app/components/Wallboard";
-import { CLIENT_REFRESH_INTERVAL_MS } from "@/config";
+import GridLayout, { WallboardData } from "@/app/components/GridLayout";
 import { useState, useEffect } from "react";
 
-export default function Page() {
+const REFRESH_INTERVAL_MS = 1000;
+interface Props {
+  apiUrl: string;
+  title: string;
+}
+
+export default function QueueSummary({ apiUrl, title }: Props) {
   const [apiData, setApiData] = useState<WallboardData | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
   const fetchData = async () => {
     try {
-      const res = await fetch("/api/wallboards/queue-summary?team=lnp")
+      const res = await fetch(apiUrl)
       const data = await res.json();
       setApiData(data);
     } catch (err) {
@@ -20,14 +25,15 @@ export default function Page() {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, CLIENT_REFRESH_INTERVAL_MS);
+    const interval = setInterval(fetchData, REFRESH_INTERVAL_MS);
     return () => clearInterval(interval);
   }, []);
 
   if (!hydrated || !apiData) return <div className="text-white text-2xl">Loading...</div>;
 
   return (
-    <Wallboard title="Life & Pension Broker" data={apiData} />
+    <GridLayout title={title} items={apiData.items} timestamp={apiData.timestamp} />
   );
 }
+
 
