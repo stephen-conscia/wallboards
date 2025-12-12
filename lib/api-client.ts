@@ -3,16 +3,17 @@ import { getCache, setCache } from "./memory-cache";
 import { getAccessToken } from "./refresh-token";
 
 const SEARCH_URL = "https://api.wxcc-eu2.cisco.com/search?orgid=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi83Mzg0NWZmZC00NTdlLTRlNzItYmRiNy04MDI5YmQ0OWE5YmY";
+let timestamp: number = 0;
 
 export async function fetchWallboardData<T>(
   query: string,
   cacheKey: string,
   variables?: Record<string, unknown>,
   ttlMs: number = API_CACHE_TTL_MS
-): Promise<T> {
+): Promise<T & { timestamp: number }> {
 
   const cached = getCache<T>(cacheKey);
-  if (cached) return cached;
+  if (cached) return { ...cached, timestamp };
 
   const token = await getAccessToken();
 
@@ -34,7 +35,8 @@ export async function fetchWallboardData<T>(
   try {
     const json = await response.json() as T;
     setCache<T>(cacheKey, json, ttlMs);
-    return json;
+    timestamp = Date.now();
+    return { ...json, timestamp };
   } catch {
     throw new Error("API returned invalid JSON.");
   }

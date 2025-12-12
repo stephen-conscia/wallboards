@@ -4,15 +4,9 @@ import { AggregationWithExtras } from "@/lib/query-helpers";
 import { useState, useEffect } from "react";
 import GridLayout, { WallboardData } from "./GridLayout";
 
-interface TeamData {
-  name: string;
-  queueData: [AggregationWithExtras, AggregationWithExtras];
-  agentData: [AggregationWithExtras];
-}
-
 interface Payload {
   timestamp: number;
-  teams: [TeamData, TeamData]; // exactly two teams
+  items: AggregationWithExtras[];
 }
 
 const borderColors = ["border-yellow-900", "border-sky-900"];
@@ -29,17 +23,21 @@ export default function DualOverview({ apiUrl, title }: Props) {
     try {
       const res = await fetch(apiUrl);
       const data = await res.json() as Payload;
-      const items: WallboardData["items"] = data.teams.flatMap((team, index) => [
-        { name: team.name, label: team.name, borderColor: borderColors[index] },
-        { ...team.agentData[0], borderColor: borderColors[index] },
-        { ...team.queueData[0], borderColor: borderColors[index] },
-        { ...team.queueData[1], borderColor: borderColors[index] },
-      ]);
+
+      const items: WallboardData['items'] = data.items.map(function(item, index) {
+        return {
+          ...item,
+          borderColor: borderColors[Math.floor(index / (data.items.length / 2))]
+        }
+      });
+
       setApiData({ timestamp: data.timestamp, title, items });
+
     } catch (err) {
       console.error(err);
     }
   };
+
 
   useEffect(() => {
     fetchData();
