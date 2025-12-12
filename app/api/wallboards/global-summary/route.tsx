@@ -169,21 +169,17 @@ query AgentTasks($from: Long!, $to: Long!) {
 export async function GET(request: NextRequest) {
   try {
 
-    const { data } = await fetchWallboardData<GlobalData>(
+    const { data, timestamp } = await fetchWallboardData<GlobalData>(
       query,
       "global-query",
       { from: startOfToday(), to: Date.now() }
     );
 
-    const taskLegs = data.taskLegDetails.taskLegs;
-    const tasks = data.taskDetails.tasks;
-    const agentSessions = data.agentSession.agentSessions;
+    const taskLegStats = parseAggregations(data.taskLegDetails.taskLegs[0].aggregation);
+    const taskStats = parseAggregations(data.taskDetails.tasks[0].aggregation);
+    const agentStats = parseAggregations(data.agentSession.agentSessions[0].aggregation);
 
-    const taskLegStats = parseAggregations(taskLegs[0].aggregation);
-    const taskStats = parseAggregations(tasks[0].aggregation);
-    const agentStats = parseAggregations(agentSessions[0].aggregation);
-
-    return NextResponse.json({ items: [...taskStats, ...taskLegStats, ...agentStats], timestamp: Date.now() });
+    return NextResponse.json({ items: [...taskStats, ...taskLegStats, ...agentStats], timestamp });
 
   } catch (err) {
     console.error("Error fetching overview:", err);

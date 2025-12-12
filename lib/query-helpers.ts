@@ -2,7 +2,7 @@ import { getWallboardConfig, METRICS, Threshold, WALLBOARDS } from "@/config";
 
 export interface Aggregation {
   name: string;
-  value: number;
+  value?: number;
 }
 
 export interface AggregationWithExtras extends Aggregation {

@@ -25,11 +25,9 @@ let cached: TokenCache = {
 
 let inFlightRefresh: Promise<TokenCache> | null = null;
 
-const REFRESH_BUFFER_MS = 4 * 24 * 60 * 60 * 1000; // 4 days
-
 export async function getAccessToken(): Promise<string> {
 
-  if (Date.now() < cached.expiresAt - REFRESH_BUFFER_MS) {
+  if (Date.now() < cached.expiresAt) {
     return cached.accessToken;
   }
 
@@ -43,7 +41,6 @@ export async function getAccessToken(): Promise<string> {
       const response = await fetch(TOKEN_REFRESH_URL, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          "Authorization": `Bearer ${cached.accessToken}`,
         },
         method: "POST",
         body: new URLSearchParams({
@@ -54,9 +51,9 @@ export async function getAccessToken(): Promise<string> {
         })
       });
 
-
       if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        const text = await response.text();
+        throw new Error(`Token refresh failed (${response.status}): ${text}`);
       }
 
       const json = await response.json() as Token;
@@ -64,7 +61,7 @@ export async function getAccessToken(): Promise<string> {
       cached = {
         accessToken: json.access_token,
         refreshToken: json.refresh_token,
-        expiresAt: Date.now() + (json.expires_in * 1000)
+        expiresAt: Date.now() + (json.expires_in * 1000) * 0.75
       };
 
       return cached;

@@ -3,13 +3,9 @@
 import Card from "./Card";
 import { formatCardValue, getThresholdStatus } from "@/lib/wallboard-thresholds";
 import WallboardLayout from "./WallboardLayout";
-import { Threshold } from "@/config";
+import { AggregationWithExtras } from "@/lib/query-helpers";
 
-interface WallboardItem {
-  name: string;
-  value?: number;
-  label: string;
-  thresholds?: Threshold;
+interface WallboardItem extends AggregationWithExtras {
   borderColor?: string;
 }
 

@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
 
     const query = getQuery(teamIds, skillIds);
 
-    const { data } = await fetchWallboardData<Root>(
+    const { data, timestamp } = await fetchWallboardData<Root>(
       query,
       url.pathname + url.search,
       { from: startOfToday(), to: Date.now() }
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
 
     const firstTen = sorted.slice(0, 10);
 
-    return NextResponse.json({ agentSessions: firstTen, timestamp: Date.now() });
+    return NextResponse.json({ agentSessions: firstTen, timestamp });
 
   } catch (err) {
     console.error("Error fetching overview:", err);
@@ -89,8 +89,8 @@ query AgentTasks($from: Long!, $to: Long!) {
     to: $to
     filter: {
       and: [
-        { or: [ ${teamIds.map(id => `{ teamId: { equals: "${id}" } }`) } ] }
-        { or: [ ${skillList.map(skillName => `{ agentSkills: { name: { equals: "${skillName}" } intVal: { gt: 0 } } }`) } ] }
+        { or: [ ${teamIds.map(id => `{ teamId: { equals: "${id}" } }`)} ] }
+        { or: [ ${skillList.map(skillName => `{ agentSkills: { name: { equals: "${skillName}" } intVal: { gt: 0 } } }`)} ] }
         { isActive: { equals: true } },
         { channelInfo: { channelType: { equals: "telephony" } } }
       ]

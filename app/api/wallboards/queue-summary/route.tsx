@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
     const query = `query Summary($to: Long!) { ${q} }`;
 
     console.log(query);
-    const { data } = await fetchWallboardData<Root>(
+    const { data, timestamp } = await fetchWallboardData<Root>(
       query,
       url.pathname + url.search,
       { to: Date.now() }
@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
     const taskStats = parseAggregations(tasks[0].aggregation, teamParam);
     const agentStats = parseAggregations(agentSessions[0].aggregation, teamParam);
 
-    return NextResponse.json({ items: [...taskStats, ...agentStats, ...taskLegStats], timestamp: Date.now() });
+    return NextResponse.json({ items: [...taskStats, ...agentStats, ...taskLegStats], timestamp });
 
   } catch (err) {
     console.error("Error fetching overview:", err);

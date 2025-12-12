@@ -1,6 +1,6 @@
 import { getWallboardConfig, WallboardConfig } from "@/config";
 import { fetchWallboardData } from "@/lib/api-client";
-import { Aggregation, parseAggregations, startOfToday } from "@/lib/query-helpers";
+import { Aggregation, AggregationWithExtras, parseAggregations, startOfToday } from "@/lib/query-helpers";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -61,22 +61,27 @@ export async function GET(request: NextRequest) {
     }
     const query = `
       query Overview($to: Long!) {
-        ${generateAgentQuery("A", wallboardData[0].teams.map(config => config.id), wallboardData[0].skills ?? [])},
+        ${generateAgentQuery("A", wallboardData[0].teams.map(config => config.id), wallboardData[0].skills)},
         ${generateQueueQuery("A", wallboardData[0].skills)},
-${generateAgentQuery("B", wallboardData[1].teams.map(config => config.id) ?? [], wallboardData[1].skills)},
+        ${generateAgentQuery("B", wallboardData[1].teams.map(config => config.id) ?? [], wallboardData[1].skills)},
         ${generateQueueQuery("B", wallboardData[1].skills)},
   }`;
 
-    const { data } = await fetchWallboardData<Root>(query, "B-overview", { to: Date.now() });
+    const { data, timestamp } = await fetchWallboardData<Root>(query, "B-overview", { to: Date.now() });
 
     const aAgent = parseAggregations(data.AAgentStateData!.agentSessions[0].aggregation, teams[0]);
     const aQueue = parseAggregations(data.AQueueStateData!.taskLegs[0].aggregation, teams[0]);
     const bAgent = parseAggregations(data.BAgentStateData!.agentSessions[0].aggregation, teams[1]);
     const bQueue = parseAggregations(data.BQueueStateData!.taskLegs[0].aggregation, teams[1]);
 
+    const wallboardItems: AggregationWithExtras[] = [
+      { name: `group${wallboardData[0].name}`, label: wallboardData[0].name }, aAgent, aQueue,
+      { name: `group${wallboardData[1].name}`, label: wallboardData[1].name }, bAgent, bQueue]
+      .flat();
+
     return NextResponse.json({
-      timestamp: Date.now(),
-      teams: [{ name: wallboardData[0].name, queueData: aAgent, agentData: aQueue }, { name: wallboardData[1].name, queueData: bAgent, agentData: bQueue }],
+      timestamp,
+      items: wallboardItems
     });
   } catch (err) {
     console.error("Error fetching overview:", err);
