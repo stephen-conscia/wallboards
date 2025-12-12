@@ -59,13 +59,12 @@ export async function GET(request: NextRequest) {
         );
       }
     }
-
     const query = `
       query Overview($to: Long!) {
-        ${generateAgentQuery("A", wallboardData[0].teams.map(config => config.id) ?? [])},
-        ${generateQueueQuery("A", wallboardData[0].queues.map(config => config.id) ?? [])},
-        ${generateAgentQuery("B", wallboardData[1].teams.map(config => config.id) ?? [])},
-        ${generateQueueQuery("B", wallboardData[1].queues.map(config => config.id) ?? [])} 
+        ${generateAgentQuery("A", wallboardData[0].teams.map(config => config.id), wallboardData[0].skills ?? [])},
+        ${generateQueueQuery("A", wallboardData[0].skills)},
+${generateAgentQuery("B", wallboardData[1].teams.map(config => config.id) ?? [], wallboardData[1].skills)},
+        ${generateQueueQuery("B", wallboardData[1].skills)},
   }`;
 
     const { data } = await fetchWallboardData<Root>(query, "B-overview", { to: Date.now() });
@@ -91,9 +90,8 @@ export async function GET(request: NextRequest) {
 /**
  * Generate agent query string
  */
-function generateAgentQuery(prefix: string, teamIds: string[]): string {
+function generateAgentQuery(prefix: string, teamIds: string[], skillList: string[]): string {
   const from = startOfToday();
-  const teamFilters = teamIds.map(id => `{ teamId: { equals: "${id}" } } `).join(", ");
   return `
     ${prefix}AgentStateData: agentSession(
     from: ${from}
@@ -101,8 +99,10 @@ function generateAgentQuery(prefix: string, teamIds: string[]): string {
       filter: {
     and: [
       { isActive: { equals: true } }
-          { channelInfo: { channelType: { equals: "telephony" } } }
-          { or: [${teamFilters}] }
+      { channelInfo: { channelType: { equals: "telephony" } } }
+      { or: [ ${teamIds.map(id => `{ teamId: { equals: "${id}" } } `)} ] }
+      { or: [ ${skillList.map(name => `{ agentSkills: { name: { equals: "${name}" } } } `)} ] }
+
     ]
   }
       aggregations: [
@@ -120,9 +120,9 @@ function generateAgentQuery(prefix: string, teamIds: string[]): string {
 /**
  * Generate queue query string
  */
-function generateQueueQuery(prefix: string, queueIds: string[]): string {
+function generateQueueQuery(prefix: string, skillList: string[]): string {
   const from = startOfToday();
-  const queueFilters = queueIds.map(id => `{ queue: { id: { equals: "${id}" } } } `).join(", ");
+  const skillFilters = skillList.map(name => `{ requiredSkills: { name: { equals: "${name}" } } } `);
   return `
     ${prefix}QueueStateData: taskLegDetails(
     from: ${from}
@@ -131,7 +131,7 @@ function generateQueueQuery(prefix: string, queueIds: string[]): string {
     and: [
       { isActive: { equals: true } },
       { channelType: { equals: telephony } },
-      { or: [${queueFilters}] }
+      { or: [ ${skillFilters} ] }
     ]
   }
       aggregations: [

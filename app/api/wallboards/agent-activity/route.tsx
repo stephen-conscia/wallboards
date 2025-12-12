@@ -48,9 +48,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const teamIds = wallboardData.teams?.map(config => config.id) ?? [];
+    const teamIds = wallboardData.teams.map(config => config.id) ?? [];
+    const skillIds = wallboardData.skills;
 
-    const query = getQuery(teamIds);
+    const query = getQuery(teamIds, skillIds);
 
     const { data } = await fetchWallboardData<Root>(
       query,
@@ -80,7 +81,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-function getQuery(teamIds: string[]) {
+function getQuery(teamIds: string[], skillList: string[]) {
   return `
 query AgentTasks($from: Long!, $to: Long!) {
   agentSession(
@@ -88,7 +89,8 @@ query AgentTasks($from: Long!, $to: Long!) {
     to: $to
     filter: {
       and: [
-        { or: [ ${teamIds.map(id => `{ teamId: { equals: "${id}" } }`).join(",")} ] }
+        { or: [ ${teamIds.map(id => `{ teamId: { equals: "${id}" } }`) } ] }
+        { or: [ ${skillList.map(skillName => `{ agentSkills: { name: { equals: "${skillName}" } intVal: { gt: 0 } } }`) } ] }
         { isActive: { equals: true } },
         { channelInfo: { channelType: { equals: "telephony" } } }
       ]

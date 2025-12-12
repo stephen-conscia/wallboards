@@ -31,7 +31,7 @@ export default function Card({ title, value: content, threshold = "default", bor
       <h3
         className="
           tracking-tight text-heading
-          text-2xl md:text-3xl lg:text-4xl xl:text-5xl
+          text-3xl md:text-4xl lg:text-5xl xl:text-6xl
           text-center
         "
       >
@@ -43,7 +43,7 @@ export default function Card({ title, value: content, threshold = "default", bor
         <p
           className={`
             font-bold tracking-tight text-heading
-            text-4xl md:text-5xl lg:text-6xl xl:text-7xl
+            text-5xl md:text-6xl lg:text-7xl xl:text-8xl
             text-center ${status}
           `}
         >

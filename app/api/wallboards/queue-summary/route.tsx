@@ -67,12 +67,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const teamIds = wallboardData.teams?.map(config => config.id) ?? [];
-    const queueIds = wallboardData.queues?.map(config => config.id) ?? [];
+    const teamIds = wallboardData.teams.map(config => config.id) ?? [];
+    const skillList = wallboardData.skills;
 
-    const q = getQuery(teamIds, queueIds);
+    const q = getQuery(teamIds, skillList);
     const query = `query Summary($to: Long!) { ${q} }`;
 
+    console.log(query);
     const { data } = await fetchWallboardData<Root>(
       query,
       url.pathname + url.search,
@@ -98,7 +99,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-function getQuery(teamIds: string[], queueIds: string[]) {
+function getQuery(teamIds: string[], skillList: string[]) {
   const fromTime = startOfToday();
 
   return `
@@ -110,7 +111,7 @@ taskLegDetails: taskLegDetails(
       { status: { equals: "parked" } },
       { channelType:{ equals: telephony } },
       { isActive:{ equals: true } },
-      { or: [ ${queueIds.map(id => `{ queue: {id: { equals: "${id}" } } }`).join(",")} ] }
+      { or: [ ${skillList.map(name => `{ requiredSkills: { name: { equals: "${name}" } } } `)} ] }
     ]
   }
   aggregations: [
@@ -142,7 +143,7 @@ taskDetails: taskDetails(
       { channelType: { equals: telephony } }
       { direction: { equals: "inbound" } }
       { isActive: { equals: false } }
-      { or: [ ${queueIds.map(id => `{ lastQueue: { equals: { id: "${id}"} } }`).join(",")} ] }
+      { or: [ ${skillList.map(name => `{ matchedSkills: { name: { equals: "${name}" } } } `)} ] }
     ]
   }
   aggregations: [
@@ -173,7 +174,8 @@ agentSession: agentSession(
     and: [
       { isActive: { equals: true } }
       { channelInfo: { channelType: { equals: "telephony" } } }
-      { or: [ ${teamIds.map(id => `{ teamId: { equals: "${id}" } }`).join(",")} ] }
+      { or: [ ${teamIds.map(id => `{ teamId: { equals: "${id}" } } `)} ] }
+      { or: [ ${skillList.map(name => `{ agentSkills: { name: { equals: "${name}" } } } `)} ] }
     ]
   }
   aggregations: [

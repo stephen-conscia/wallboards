@@ -45,9 +45,9 @@ export type WallboardConfig = {
   key: string;
   name: string;
   teams: Team[];
+  skills: string[];
   queues: Queue[];
   thresholds?: Partial<Record<keyof typeof METRICS, Threshold>>;
-
 };
 
 //
@@ -66,6 +66,7 @@ export const WALLBOARDS: Record<string, WallboardConfig> = {
     queues: [
       { id: "2c749532-d4a7-4a15-bc04-b46ddc2889f6", name: "P21 Test 3" },
     ],
+    skills: ["P21 Skill 2"],
     thresholds: {
       idle: { warning: 2, danger: 4 },
       callsInQueue: { warning: 2, danger: 3 },
@@ -81,8 +82,8 @@ export const WALLBOARDS: Record<string, WallboardConfig> = {
     ],
     queues: [
       { id: "4da6f031-9b94-479a-95f1-0229d05f2ed3", name: "P21 Test 1" },
-      { id: "357cb757-368d-4c9a-957e-7b9d9f17458b", name: "P21 Test 2" },
     ],
+    skills: ["P21 Skill 1"],
     thresholds: {
       idle: { warning: 2, danger: 4 },
       callsInQueue: { warning: 2, danger: 3 },
@@ -106,6 +107,7 @@ export const WALLBOARDS: Record<string, WallboardConfig> = {
       { id: "cdc1be33-c6c3-4f4f-a44e-bdccde7b087d", name: "Direct Home Renewal" },
       { id: "1f9f483c-434b-466b-94b3-cbc7211ad394", name: "Direct Home Sales" },
     ],
+    skills: ["Direct Home Service", "Direct Home Renewal", "Direct Home Sales"],
     thresholds: {
       idle: { warning: 2, danger: 4 },
       callsInQueue: { warning: 2, danger: 3 },
@@ -129,6 +131,7 @@ export const WALLBOARDS: Record<string, WallboardConfig> = {
       { id: "853f7c5d-f01c-495d-ac42-741e9c6bd1d3", name: "Direct Motor Renewal" },
       { id: "1265b5a6-c3de-4bc0-b19d-247994538384", name: "Direct Motor Sales" },
     ],
+    skills: ["Direct Motor Service", "Direct Motor Renewal", "Direct Motor Sales"],
     thresholds: {
       idle: { warning: 2, danger: 4 },
       callsInQueue: { warning: 2, danger: 3 },
@@ -157,6 +160,7 @@ export const WALLBOARDS: Record<string, WallboardConfig> = {
       { id: "dca0160c-72c8-41aa-9300-fed2fe9e7fff", name: "LnP_Pensions" },
       { id: "29b98e8f-2744-474a-b526-da7e8fca084b", name: "LnP_UW" },
     ],
+    skills: ["LnP_Agency", "LnP_Annuity", "LnP_BSC_Corp_OPP", "LnP_BSC_NonCorp_OPP", "LnP_Claims", "LnP_CustSC", "LnP_Exist_Claims", "LnP_Exist_Life", "LnP_Pensions", "LnP_UW"],
     thresholds: {
       idle: { warning: 2, danger: 4 },
       callsInQueue: { warning: 2, danger: 3 },

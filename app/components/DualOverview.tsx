@@ -6,8 +6,8 @@ import GridLayout, { WallboardData } from "./GridLayout";
 
 interface TeamData {
   name: string;
-  queueData: AggregationWithExtras[];
-  agentData: AggregationWithExtras[];
+  queueData: [AggregationWithExtras, AggregationWithExtras];
+  agentData: [AggregationWithExtras];
 }
 
 interface Payload {
@@ -30,9 +30,10 @@ export default function DualOverview({ apiUrl, title }: Props) {
       const res = await fetch(apiUrl);
       const data = await res.json() as Payload;
       const items: WallboardData["items"] = data.teams.flatMap((team, index) => [
-        { name: team.name, label: team.name, borderColor: borderColors[index] }, // team header
-        { ...team.agentData[0], borderColor: borderColors[index] },                     // first agent
-        { ...team.queueData[0], borderColor: borderColors[index] },                     // first agent
+        { name: team.name, label: team.name, borderColor: borderColors[index] },
+        { ...team.agentData[0], borderColor: borderColors[index] },
+        { ...team.queueData[0], borderColor: borderColors[index] },
+        { ...team.queueData[1], borderColor: borderColors[index] },
       ]);
       setApiData({ timestamp: data.timestamp, title, items });
     } catch (err) {
@@ -49,6 +50,6 @@ export default function DualOverview({ apiUrl, title }: Props) {
   if (!apiData) return <div className="text-white text-2xl">Loading...</div>;
 
   return (
-    <GridLayout items={apiData.items} title={apiData.title} timestamp={apiData.timestamp} />
+    <GridLayout items={apiData.items} title={apiData.title} timestamp={apiData.timestamp} columns={4} />
   );
 }
