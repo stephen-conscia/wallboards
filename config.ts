@@ -71,7 +71,6 @@ export const WALLBOARDS: Record<string, WallboardConfig> = {
       callsInQueue: { warning: 2, danger: 3 },
       longestWaitTimeSeconds: { danger: 180, warning: 90, success: 1 },
       available: { danger: 0, warning: 2, success: 3 },
-
     }
   },
   plannet21: {
@@ -113,7 +112,6 @@ export const WALLBOARDS: Record<string, WallboardConfig> = {
       longestWaitTimeSeconds: { danger: 180, warning: 90, success: 1 },
       available: { danger: 0, warning: 2, success: 3 },
     }
-
   },
 
   directMotor: {

@@ -20,7 +20,8 @@ export default function Card({ title, value: content, threshold = "default", bor
   return (
     <div
       className={`
-        flex flex-col justify-center items-center
+        flex flex-col items-center
+        ${isTitleOnly ? "justify-center" : "justify-around"}
         gap-3 md:gap-4 lg:gap-6
         border-2 rounded-2xl ${borderColor}
         p-6 md:p-8 lg:p-10

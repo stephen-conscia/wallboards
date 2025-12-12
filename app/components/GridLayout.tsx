@@ -28,7 +28,7 @@ export default function Wallboard({ title, items, timestamp, columns = 3 }: Wall
         <div
           className={`
           flex-1 w-full max-w-screen-2xl mx-auto
-          grid grid-cols-2 md:grid-cols-3 lg:${columns === 4 ? "grid-cols-4" : "grid-cols-3"} 
+          grid ${columns === 4 ? "md:grid-cols-4" : "md:grid-cols-3"} 
           gap-6 md:gap-8 lg:gap-10 xl:gap-12
           p-2 md:p-6 2xl:p12
         `}

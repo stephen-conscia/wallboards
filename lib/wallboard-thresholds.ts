@@ -1,13 +1,13 @@
-import { Threshold, WALLBOARDS, METRICS } from "@/config";
+import { Threshold, METRICS } from "@/config";
 
 export type ThresholdStatus = "default" | "warning" | "danger" | "success";
 
 export function getThresholdStatus(
   name: keyof typeof METRICS,
-  value: number,
-  threshold: Threshold | undefined
+  value?: number,
+  threshold?: Threshold | undefined
 ): "default" | "warning" | "danger" | "success" {
-  if (!threshold) return "default";
+  if (!threshold || !value) return "default";
 
   let compareValue = value;
 
@@ -35,8 +35,9 @@ export function getThresholdStatus(
 
 export function formatCardValue(
   name: keyof typeof METRICS,
-  value: number,
-) {
+  value?: number,
+): React.ReactNode {
+  if (value === undefined) return;
   if (name === "longestWaitTimeSeconds") {
     return formatTimeSince(value === 0 ? Date.now() : value);
   }
