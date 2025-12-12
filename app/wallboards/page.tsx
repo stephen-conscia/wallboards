@@ -22,7 +22,8 @@ const linkGroups = [
     title: "LNP",
     links: [
       { href: "/wallboards/lnp/agent-activity", label: "Agent Activity" },
-      { href: "/wallboards/lnp/queue-summary", label: "Queue Summary" },
+      { href: "/wallboards/lnp/broker", label: "Broker" },
+      { href: "/wallboards/lnp/csc", label: "CSC" },
     ],
   },
   {

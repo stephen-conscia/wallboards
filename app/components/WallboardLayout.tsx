@@ -13,9 +13,9 @@ export default function WallboardLayout({ title, timestamp, children }: Props) {
         {title}
       </h1>
       {children}
-      <div className="pb-1 text-sm opacity-60">
+      {timestamp && <div className="pb-1 text-sm opacity-60">
         Last updated: {new Date(timestamp).toLocaleTimeString()}
-      </div>
+      </div>}
     </>
   )
 }

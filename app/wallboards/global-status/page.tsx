@@ -9,7 +9,7 @@ export default function Page() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch("/api/wallboards/global")
+      const res = await fetch("/api/wallboards/global-summary")
       const data = await res.json();
       setApiData(data);
     } catch (err) {
