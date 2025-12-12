@@ -5,7 +5,6 @@ import GridLayout, { WallboardData } from "@/app/components/GridLayout";
 
 export default function Page() {
   const [apiData, setApiData] = useState<WallboardData | null>(null);
-  const [hydrated, setHydrated] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -16,7 +15,6 @@ export default function Page() {
       console.error(err);
     }
   };
-  useEffect(() => setHydrated(true), []);
 
   useEffect(() => {
     fetchData();
@@ -24,7 +22,7 @@ export default function Page() {
     return () => clearInterval(interval);
   }, []);
 
-  if (!hydrated || !apiData) return <div className="text-white text-2xl">Loading...</div>;
+  if (!apiData) return <div className="text-white text-2xl">Loading...</div>;
 
   return (
     <GridLayout title="Global Status" timestamp={apiData.timestamp} items={apiData.items} columns={4} />

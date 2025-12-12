@@ -43,7 +43,7 @@ export default function Card({ title, value: content, threshold = "default", bor
         <p
           className={`
             font-bold tracking-tight text-heading
-            text-5xl md:text-6xl lg:text-7xl xl:text-8xl
+            text-4xl md:text-5xl lg:text-6xl xl:text-7xl
             text-center ${status}
           `}
         >

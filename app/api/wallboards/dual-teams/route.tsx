@@ -61,9 +61,9 @@ export async function GET(request: NextRequest) {
     }
     const query = `
       query Overview($to: Long!) {
-        ${generateAgentQuery("A", wallboardData[0].teams.map(config => config.id), wallboardData[0].skills ?? [])},
+        ${generateAgentQuery("A", wallboardData[0].teams.map(config => config.id), wallboardData[0].skills)},
         ${generateQueueQuery("A", wallboardData[0].skills)},
-${generateAgentQuery("B", wallboardData[1].teams.map(config => config.id) ?? [], wallboardData[1].skills)},
+        ${generateAgentQuery("B", wallboardData[1].teams.map(config => config.id) ?? [], wallboardData[1].skills)},
         ${generateQueueQuery("B", wallboardData[1].skills)},
   }`;
 
@@ -74,7 +74,10 @@ ${generateAgentQuery("B", wallboardData[1].teams.map(config => config.id) ?? [],
     const bAgent = parseAggregations(data.BAgentStateData!.agentSessions[0].aggregation, teams[1]);
     const bQueue = parseAggregations(data.BQueueStateData!.taskLegs[0].aggregation, teams[1]);
 
-    const wallboardItems: AggregationWithExtras[] = [{ name: `group${wallboardData[0].name}`, label: wallboardData[0].name }, aAgent, aQueue, { name: `group${wallboardData[1].name}`, label: wallboardData[1].name }, bAgent, bQueue].flat();
+    const wallboardItems: AggregationWithExtras[] = [
+      { name: `group${wallboardData[0].name}`, label: wallboardData[0].name }, aAgent, aQueue,
+      { name: `group${wallboardData[1].name}`, label: wallboardData[1].name }, bAgent, bQueue]
+      .flat();
 
     return NextResponse.json({
       timestamp,

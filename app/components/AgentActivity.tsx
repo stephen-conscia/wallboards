@@ -30,7 +30,6 @@ interface Props {
 
 export default function AgentActivity({ path, title }: Props) {
   const [apiData, setApiData] = useState<ApiData | null>(null);
-  const [hydrated, setHydrated] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -42,7 +41,6 @@ export default function AgentActivity({ path, title }: Props) {
     }
   };
 
-  useEffect(() => setHydrated(true), []);
 
   useEffect(() => {
     fetchData();
@@ -51,7 +49,7 @@ export default function AgentActivity({ path, title }: Props) {
   }, []);
 
   // Ensure 'Loading' text is highly visible
-  if (!hydrated || !apiData) return <div className="text-white text-[clamp(2rem, 5vw, 4rem)] font-bold text-center mt-20">Loading...</div>;
+  if (!apiData) return <div className="text-white text-[clamp(2rem, 5vw, 4rem)] font-bold text-center mt-20">Loading...</div>;
 
 
   return (
