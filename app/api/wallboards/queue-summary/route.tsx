@@ -73,7 +73,6 @@ export async function GET(request: NextRequest) {
     const q = getQuery(teamIds, skillList);
     const query = `query Summary($to: Long!) { ${q} }`;
 
-    console.log(query);
     const { data, timestamp } = await fetchWallboardData<Root>(
       query,
       url.pathname + url.search,

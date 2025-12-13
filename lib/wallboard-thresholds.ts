@@ -7,7 +7,7 @@ export function getThresholdStatus(
   value?: number,
   threshold?: Threshold | undefined
 ): "default" | "warning" | "danger" | "success" {
-  if (!threshold || !value) return "default";
+  if (!threshold || value === undefined) return "default";
 
   let compareValue = value;
 
@@ -23,7 +23,7 @@ export function getThresholdStatus(
       if (threshold.success !== undefined && compareValue >= threshold.success) return "success";
       if (threshold.warning !== undefined && compareValue >= threshold.warning) return "warning";
       if (threshold.danger !== undefined && compareValue >= threshold.danger) return "danger";
-      break;
+      return "default"
   }
 
   if (threshold.danger !== undefined && compareValue >= threshold.danger) return "danger";
