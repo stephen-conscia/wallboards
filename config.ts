@@ -92,10 +92,7 @@ export const WALLBOARDS: Record<string, WallboardConfig> = {
     ],
     skills: ["Direct Home Service", "Direct Home Renewal", "Direct Home Sales"],
     thresholds: {
-      idle: { warning: 2, danger: 4 },
       callsInQueue: { warning: 2, danger: 3 },
-      longestWaitTimeSeconds: { danger: 180, warning: 90, success: 1 },
-      available: { danger: 0, warning: 2, success: 3 },
     }
   },
 
@@ -111,10 +108,7 @@ export const WALLBOARDS: Record<string, WallboardConfig> = {
     ],
     skills: ["Direct Motor Service", "Direct Motor Renewal", "Direct Motor Sales"],
     thresholds: {
-      idle: { warning: 2, danger: 4 },
       callsInQueue: { warning: 2, danger: 3 },
-      longestWaitTimeSeconds: { danger: 180, warning: 90, success: 1 },
-      available: { danger: 0, warning: 2, success: 3 },
     }
   },
 
@@ -139,8 +133,9 @@ export const WALLBOARDS: Record<string, WallboardConfig> = {
     name: "LNP Broker",
     teams: [
       { id: "3139aff3-35ab-4b10-9771-8c2869fa1b79", name: "LnP_BSC_Corp_NonCorp" },
+      { id: "8111c927-86f9-448a-9565-1bb0aa3331ae", name: "LnP_CustSC_BLR" },
     ],
-    skills: ["LnP_BSC_Corp_OPP", "LnP_BSC_NonCorp_OPP"],
+    skills: ["LnP_CustSC", "LnP_BSC_Corp_OPP"],
     thresholds: {
       idle: { warning: 2, danger: 4 },
       callsInQueue: { warning: 2, danger: 3 },
@@ -152,9 +147,10 @@ export const WALLBOARDS: Record<string, WallboardConfig> = {
     key: "lnp",
     name: "LNP CSC",
     teams: [
+      { id: "3139aff3-35ab-4b10-9771-8c2869fa1b79", name: "LnP_BSC_Corp_NonCorp" },
       { id: "8111c927-86f9-448a-9565-1bb0aa3331ae", name: "LnP_CustSC_BLR" },
     ],
-    skills: ["LnP_CustSC"],
+    skills: ["LnP_Pensions", "LnP_BSC_NonCorp_OPP"],
     thresholds: {
       idle: { warning: 2, danger: 4 },
       callsInQueue: { warning: 2, danger: 3 },
